@@ -22,7 +22,9 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!token.value)
   const isAdmin = computed(() => usuario.value?.rol === 'admin')
   const iniciales = computed(() =>
-    usuario.value ? `${usuario.value.nombre[0] ?? ''}${usuario.value.apellido[0] ?? ''}`.toUpperCase() : '',
+    usuario.value
+      ? `${usuario.value.nombre[0] ?? ''}${usuario.value.apellido[0] ?? ''}`.toUpperCase()
+      : '',
   )
   const nombreCorto = computed(() =>
     usuario.value ? `${usuario.value.nombre} ${usuario.value.apellido[0] ?? ''}.` : '',
@@ -52,5 +54,15 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem(USER_KEY)
   }
 
-  return { token, usuario, isAuthenticated, isAdmin, iniciales, nombreCorto, login, loginAdmin, logout }
+  return {
+    token,
+    usuario,
+    isAuthenticated,
+    isAdmin,
+    iniciales,
+    nombreCorto,
+    login,
+    loginAdmin,
+    logout,
+  }
 })

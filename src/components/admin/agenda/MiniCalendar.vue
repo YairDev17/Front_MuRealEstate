@@ -45,17 +45,31 @@ const next = () => (viewDate.value = new Date(year.value, month.value + 1, 1))
 <template>
   <div class="bg-white/3 border border-white/6 rounded-2xl p-4">
     <div class="flex items-center justify-between mb-4">
-      <button class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all" @click="prev">
+      <button
+        class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all"
+        @click="prev"
+      >
         <ChevronLeft :size="14" />
       </button>
-      <span class="text-white/60 text-sm font-medium" :style="SERIF">{{ MESES[month] }} {{ year }}</span>
-      <button class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all" @click="next">
+      <span class="text-white/60 text-sm font-medium" :style="SERIF"
+        >{{ MESES[month] }} {{ year }}</span
+      >
+      <button
+        class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all"
+        @click="next"
+      >
         <ChevronRight :size="14" />
       </button>
     </div>
 
     <div class="grid grid-cols-7 gap-0.5 mb-1">
-      <div v-for="d in DIAS_SEMANA" :key="d" class="text-center text-[9px] text-white/20 font-medium py-1">{{ d }}</div>
+      <div
+        v-for="d in DIAS_SEMANA"
+        :key="d"
+        class="text-center text-[9px] text-white/20 font-medium py-1"
+      >
+        {{ d }}
+      </div>
     </div>
 
     <div class="grid grid-cols-7 gap-0.5">
@@ -76,7 +90,10 @@ const next = () => (viewDate.value = new Date(year.value, month.value + 1, 1))
         {{ d.day }}
         <span
           v-if="d.hasVisitas && d.dateStr !== selected"
-          :class="['absolute bottom-0.5 w-1 h-1 rounded-full', d.hasPending ? 'bg-[#b8935a]' : 'bg-white/20']"
+          :class="[
+            'absolute bottom-0.5 w-1 h-1 rounded-full',
+            d.hasPending ? 'bg-[#b8935a]' : 'bg-white/20',
+          ]"
         />
       </button>
     </div>

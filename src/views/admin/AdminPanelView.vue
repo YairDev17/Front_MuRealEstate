@@ -44,23 +44,53 @@ onMounted(async () => {
 const filtradas = computed(() => {
   const q = search.value.trim().toLowerCase()
   if (!q) return propiedades.value
-  return propiedades.value.filter((p) => `${p.titulo} ${p.colonia} ${p.agente}`.toLowerCase().includes(q))
+  return propiedades.value.filter((p) =>
+    `${p.titulo} ${p.colonia} ${p.agente}`.toLowerCase().includes(q),
+  )
 })
 const porEstado = (estado: EstadoPropiedad) => filtradas.value.filter((p) => p.estado === estado)
 
 const stats = computed(() => [
-  { label: 'Total propiedades', value: propiedades.value.length, icon: Filter, color: 'text-white/50' },
-  { label: 'Listadas', value: propiedades.value.filter((p) => p.estado === 'listada').length, icon: ListChecks, color: 'text-emerald-400' },
-  { label: 'Por listar', value: propiedades.value.filter((p) => p.estado === 'por-listar').length, icon: Clock, color: 'text-amber-400' },
-  { label: 'En revisión', value: propiedades.value.filter((p) => p.estado === 'en-revision').length, icon: TrendingUp, color: 'text-sky-400' },
+  {
+    label: 'Total propiedades',
+    value: propiedades.value.length,
+    icon: Filter,
+    color: 'text-white/50',
+  },
+  {
+    label: 'Listadas',
+    value: propiedades.value.filter((p) => p.estado === 'listada').length,
+    icon: ListChecks,
+    color: 'text-emerald-400',
+  },
+  {
+    label: 'Por listar',
+    value: propiedades.value.filter((p) => p.estado === 'por-listar').length,
+    icon: Clock,
+    color: 'text-amber-400',
+  },
+  {
+    label: 'En revisión',
+    value: propiedades.value.filter((p) => p.estado === 'en-revision').length,
+    icon: TrendingUp,
+    color: 'text-sky-400',
+  },
 ])
 
 const pendientes = computed(() => postulaciones.value.filter((p) => p.estado === 'pendiente'))
 const revisadas = computed(() => postulaciones.value.filter((p) => p.estado !== 'pendiente'))
 const postStats = computed(() => [
   { label: 'Pendientes', value: pendientes.value.length, color: 'text-amber-400' },
-  { label: 'Aprobadas', value: postulaciones.value.filter((p) => p.estado === 'aprobada').length, color: 'text-emerald-400' },
-  { label: 'Rechazadas', value: postulaciones.value.filter((p) => p.estado === 'rechazada').length, color: 'text-red-400' },
+  {
+    label: 'Aprobadas',
+    value: postulaciones.value.filter((p) => p.estado === 'aprobada').length,
+    color: 'text-emerald-400',
+  },
+  {
+    label: 'Rechazadas',
+    value: postulaciones.value.filter((p) => p.estado === 'rechazada').length,
+    color: 'text-red-400',
+  },
 ])
 
 async function resolver(id: number, accion: 'aprobar' | 'rechazar') {
@@ -86,7 +116,9 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
   <div class="min-h-screen bg-[#0d0d0c] font-['DM_Sans',sans-serif]">
     <AdminTopBar section="Panel de control" wide>
       <template #center>
-        <div class="hidden md:flex items-center bg-white/5 border border-white/8 rounded-lg px-3 py-2 gap-2 w-56">
+        <div
+          class="hidden md:flex items-center bg-white/5 border border-white/8 rounded-lg px-3 py-2 gap-2 w-56"
+        >
           <Search :size="13" class="text-white/20 shrink-0" />
           <input
             v-model="search"
@@ -109,7 +141,9 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
           </a>
           <div class="w-px h-4 bg-white/8" />
           <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/60 font-medium">
+            <div
+              class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/60 font-medium"
+            >
               {{ auth.iniciales || 'AD' }}
             </div>
             <span class="hidden sm:block text-white/40 text-xs">Administrador</span>
@@ -131,7 +165,9 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
       <div class="flex items-start justify-between mb-6 gap-4 flex-wrap">
         <div>
           <h1 class="text-white text-2xl mb-1" :style="SERIF">Gestión de Propiedades</h1>
-          <p class="text-white/30 text-sm">Seguimiento de estado de todas las propiedades del portafolio.</p>
+          <p class="text-white/30 text-sm">
+            Seguimiento de estado de todas las propiedades del portafolio.
+          </p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
           <button
@@ -156,7 +192,12 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
         <button
           v-for="t in [
             { val: 'portafolio', label: 'Portafolio', icon: ListChecks, badge: 0 },
-            { val: 'postulaciones', label: 'Postulaciones de usuarios', icon: Inbox, badge: pendientes.length },
+            {
+              val: 'postulaciones',
+              label: 'Postulaciones de usuarios',
+              icon: Inbox,
+              badge: pendientes.length,
+            },
           ] as const"
           :key="t.val"
           :class="[
@@ -179,7 +220,11 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
 
       <template v-if="tab === 'portafolio'">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-          <div v-for="s in stats" :key="s.label" class="bg-white/3 border border-white/6 rounded-xl px-4 py-4">
+          <div
+            v-for="s in stats"
+            :key="s.label"
+            class="bg-white/3 border border-white/6 rounded-xl px-4 py-4"
+          >
             <div :class="['flex items-center gap-2 mb-2', s.color]">
               <component :is="s.icon" :size="14" />
               <span class="text-xs tracking-wide opacity-80">{{ s.label }}</span>
@@ -191,13 +236,22 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
         <!-- Kanban -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div v-for="estado in columnas" :key="estado" class="flex flex-col min-w-0">
-            <div :class="['flex items-center justify-between mb-4 pb-3.5 border-b', ESTADO_PROPIEDAD[estado].headerBorder]">
+            <div
+              :class="[
+                'flex items-center justify-between mb-4 pb-3.5 border-b',
+                ESTADO_PROPIEDAD[estado].headerBorder,
+              ]"
+            >
               <div class="flex items-center gap-2">
                 <span :style="{ color: ESTADO_PROPIEDAD[estado].color }">
                   <component :is="ESTADO_PROPIEDAD[estado].icon" :size="14" />
                 </span>
-                <h3 class="text-white/80 text-sm font-medium tracking-wide">{{ ESTADO_PROPIEDAD[estado].label }}</h3>
-                <span class="bg-white/8 text-white/40 text-xs px-2 py-0.5 rounded-full">{{ porEstado(estado).length }}</span>
+                <h3 class="text-white/80 text-sm font-medium tracking-wide">
+                  {{ ESTADO_PROPIEDAD[estado].label }}
+                </h3>
+                <span class="bg-white/8 text-white/40 text-xs px-2 py-0.5 rounded-full">{{
+                  porEstado(estado).length
+                }}</span>
               </div>
               <button
                 class="p-1.5 rounded-lg text-white/20 hover:text-white/50 hover:bg-white/5 transition-all duration-150"
@@ -226,7 +280,11 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
 
       <template v-else>
         <div class="grid grid-cols-3 gap-3 mb-8">
-          <div v-for="s in postStats" :key="s.label" class="bg-white/3 border border-white/6 rounded-xl px-4 py-4">
+          <div
+            v-for="s in postStats"
+            :key="s.label"
+            class="bg-white/3 border border-white/6 rounded-xl px-4 py-4"
+          >
             <div :class="['flex items-center gap-2 mb-2', s.color]">
               <User :size="13" />
               <span class="text-xs tracking-wide opacity-80">{{ s.label }}</span>
@@ -251,7 +309,9 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
         </div>
 
         <div v-if="revisadas.length">
-          <p class="text-white/25 text-xs font-medium tracking-widest uppercase mb-4">Revisadas · {{ revisadas.length }}</p>
+          <p class="text-white/25 text-xs font-medium tracking-widest uppercase mb-4">
+            Revisadas · {{ revisadas.length }}
+          </p>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             <PostulacionCard v-for="p in revisadas" :key="p.id" :p="p" />
           </div>

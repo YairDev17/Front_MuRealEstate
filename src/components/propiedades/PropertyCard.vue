@@ -32,12 +32,19 @@ const favoritos = useFavoritosStore()
         class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all duration-150"
         @click.stop="favoritos.toggle(p.id)"
       >
-        <Heart :size="12" :class="favoritos.esFavorito(p.id) ? 'fill-red-400 text-red-400' : 'text-[#7a7067]'" />
+        <Heart
+          :size="12"
+          :class="favoritos.esFavorito(p.id) ? 'fill-red-400 text-red-400' : 'text-[#7a7067]'"
+        />
       </button>
     </div>
     <div class="p-4">
-      <p class="text-[#a89f95] text-xs flex items-center gap-1 mb-1 truncate"><MapPin :size="10" />{{ p.ubicacion }}</p>
-      <h3 class="text-[#1a1714] text-base leading-snug mb-3 line-clamp-1" :style="SERIF">{{ p.titulo }}</h3>
+      <p class="text-[#a89f95] text-xs flex items-center gap-1 mb-1 truncate">
+        <MapPin :size="10" />{{ p.ubicacion }}
+      </p>
+      <h3 class="text-[#1a1714] text-base leading-snug mb-3 line-clamp-1" :style="SERIF">
+        {{ p.titulo }}
+      </h3>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3 text-[#7a7067] text-xs">
           <span class="flex items-center gap-1"><Bed :size="11" />{{ p.habitaciones }}</span>

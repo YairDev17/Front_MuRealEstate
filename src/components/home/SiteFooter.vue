@@ -66,8 +66,15 @@ const socials = [
               class="h-12 w-auto object-contain brightness-0 invert opacity-80"
             />
             <div>
-              <p class="text-white/80 text-base font-semibold tracking-widest uppercase leading-none" :style="SERIF">MU</p>
-              <p class="text-white/50 text-[9px] tracking-[0.25em] uppercase leading-none mt-0.5">Real Estate</p>
+              <p
+                class="text-white/80 text-base font-semibold tracking-widest uppercase leading-none"
+                :style="SERIF"
+              >
+                MU
+              </p>
+              <p class="text-white/50 text-[9px] tracking-[0.25em] uppercase leading-none mt-0.5">
+                Real Estate
+              </p>
             </div>
           </div>
           <p class="text-white/30 text-xs leading-relaxed max-w-xs">
@@ -78,7 +85,10 @@ const socials = [
           <p class="text-white/50 text-xs tracking-widest uppercase mb-4">{{ col.title }}</p>
           <ul class="flex flex-col gap-2.5">
             <li v-for="link in col.links" :key="link.label">
-              <button class="text-white/30 text-sm hover:text-white/70 transition-colors text-left" @click="link.action">
+              <button
+                class="text-white/30 text-sm hover:text-white/70 transition-colors text-left"
+                @click="link.action"
+              >
                 {{ link.label }}
               </button>
             </li>
@@ -89,7 +99,9 @@ const socials = [
       <div class="h-px bg-white/8 mb-8" />
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p class="text-white/20 text-xs">© 2026 MU Real Estate S.A. de C.V. Todos los derechos reservados.</p>
+        <p class="text-white/20 text-xs">
+          © 2026 MU Real Estate S.A. de C.V. Todos los derechos reservados.
+        </p>
         <div class="flex items-center gap-4">
           <button
             v-for="s in socials"

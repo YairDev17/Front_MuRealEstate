@@ -14,11 +14,18 @@ const router = useRouter()
 <template>
   <nav class="sticky top-0 z-40 bg-[#111210]/90 backdrop-blur-md border-b border-white/6">
     <div
-      :class="['mx-auto px-5 flex items-center justify-between gap-4', wide ? 'max-w-screen-2xl' : 'max-w-screen-xl']"
+      :class="[
+        'mx-auto px-5 flex items-center justify-between gap-4',
+        wide ? 'max-w-screen-2xl' : 'max-w-screen-xl',
+      ]"
       style="height: 60px"
     >
       <div class="flex items-center gap-3">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-10 w-auto object-contain brightness-0 invert opacity-80" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-10 w-auto object-contain brightness-0 invert opacity-80"
+        />
         <span class="text-white/25 text-xs flex items-center gap-1">
           <ShieldCheck :size="11" class="text-white/20" /> Admin
         </span>

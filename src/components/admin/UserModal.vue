@@ -15,7 +15,11 @@ const blank: Omit<UsuarioAdmin, 'id'> = {
   rol: 'visor',
   estado: 'activo',
   ultimoAcceso: '—',
-  fechaCreacion: new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' }),
+  fechaCreacion: new Date().toLocaleDateString('es-MX', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }),
   permisos: [...PERMISOS_POR_ROL.visor],
 }
 const form = reactive<UsuarioAdmin | Omit<UsuarioAdmin, 'id'>>(
@@ -28,7 +32,9 @@ function handleRolChange(rol: RolAdmin) {
 }
 
 function togglePermiso(id: string) {
-  form.permisos = form.permisos.includes(id) ? form.permisos.filter((p) => p !== id) : [...form.permisos, id]
+  form.permisos = form.permisos.includes(id)
+    ? form.permisos.filter((p) => p !== id)
+    : [...form.permisos, id]
 }
 
 const grupos = [...new Set(PERMISOS_CATALOGO.map((p) => p.grupo))]
@@ -42,10 +48,17 @@ function guardar() {
 
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-    <div class="bg-[#141413] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div
+      class="bg-[#141413] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+    >
       <div class="flex items-center justify-between p-6 border-b border-white/6">
-        <h2 class="text-white text-lg" :style="SERIF">{{ mode === 'create' ? 'Nuevo usuario' : 'Editar usuario' }}</h2>
-        <button class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all" @click="emit('close')">
+        <h2 class="text-white text-lg" :style="SERIF">
+          {{ mode === 'create' ? 'Nuevo usuario' : 'Editar usuario' }}
+        </h2>
+        <button
+          class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all"
+          @click="emit('close')"
+        >
           <X :size="16" />
         </button>
       </div>
@@ -57,8 +70,15 @@ function guardar() {
             <input v-model="form.nombre" :class="inputCls" placeholder="Nombre" />
           </div>
           <div>
-            <label class="block text-white/40 text-xs mb-1.5 tracking-wide">Correo electrónico</label>
-            <input v-model="form.correo" type="email" :class="inputCls" placeholder="usuario@correo.com" />
+            <label class="block text-white/40 text-xs mb-1.5 tracking-wide"
+              >Correo electrónico</label
+            >
+            <input
+              v-model="form.correo"
+              type="email"
+              :class="inputCls"
+              placeholder="usuario@correo.com"
+            />
           </div>
         </div>
 
@@ -70,13 +90,17 @@ function guardar() {
               :class="[inputCls, 'appearance-none']"
               @change="handleRolChange(($event.target as HTMLSelectElement).value as RolAdmin)"
             >
-              <option v-for="r in ROLES_KEYS" :key="r" :value="r" class="bg-[#141413]">{{ ROLES[r].label }}</option>
+              <option v-for="r in ROLES_KEYS" :key="r" :value="r" class="bg-[#141413]">
+                {{ ROLES[r].label }}
+              </option>
             </select>
           </div>
           <div>
             <label class="block text-white/40 text-xs mb-1.5 tracking-wide">Estado</label>
             <select v-model="form.estado" :class="[inputCls, 'appearance-none']">
-              <option v-for="(cfg, e) in ESTADOS_USUARIO" :key="e" :value="e" class="bg-[#141413]">{{ cfg.label }}</option>
+              <option v-for="(cfg, e) in ESTADOS_USUARIO" :key="e" :value="e" class="bg-[#141413]">
+                {{ cfg.label }}
+              </option>
             </select>
           </div>
         </div>
@@ -102,7 +126,9 @@ function guardar() {
                   <span
                     :class="[
                       'w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0',
-                      form.permisos.includes(p.id) ? 'bg-[#b8935a] border-[#b8935a]' : 'border-white/15',
+                      form.permisos.includes(p.id)
+                        ? 'bg-[#b8935a] border-[#b8935a]'
+                        : 'border-white/15',
                     ]"
                   >
                     <Check v-if="form.permisos.includes(p.id)" :size="9" class="text-black" />

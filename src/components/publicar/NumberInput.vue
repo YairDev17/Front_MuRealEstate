@@ -39,7 +39,11 @@ const styles = {
       {{ label }}
     </div>
     <div :class="['flex items-center overflow-hidden', styles[variant].box]">
-      <button type="button" :class="['px-3 py-2.5 transition-all text-lg leading-none', styles[variant].btn]" @click="dec">
+      <button
+        type="button"
+        :class="['px-3 py-2.5 transition-all text-lg leading-none', styles[variant].btn]"
+        @click="dec"
+      >
         −
       </button>
       <input
@@ -52,7 +56,11 @@ const styles = {
         ]"
         @input="onInput"
       />
-      <button type="button" :class="['px-3 py-2.5 transition-all text-lg leading-none', styles[variant].btn]" @click="inc">
+      <button
+        type="button"
+        :class="['px-3 py-2.5 transition-all text-lg leading-none', styles[variant].btn]"
+        @click="inc"
+      >
         +
       </button>
     </div>

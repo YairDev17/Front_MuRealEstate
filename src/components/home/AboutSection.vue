@@ -21,9 +21,13 @@ const values = [
               class="w-full h-full object-cover"
             />
           </div>
-          <div class="absolute -bottom-6 -right-2 sm:right-6 bg-[#1a1714] text-white rounded-md p-5 shadow-xl max-w-[200px]">
+          <div
+            class="absolute -bottom-6 -right-2 sm:right-6 bg-[#1a1714] text-white rounded-md p-5 shadow-xl max-w-[200px]"
+          >
             <p class="text-3xl mb-1" :style="SERIF">11</p>
-            <p class="text-white/50 text-xs leading-snug">Años siendo referente inmobiliario en CDMX</p>
+            <p class="text-white/50 text-xs leading-snug">
+              Años siendo referente inmobiliario en CDMX
+            </p>
           </div>
         </div>
 
@@ -33,14 +37,15 @@ const values = [
             Somos el puente entre tus sueños y tu próximo hogar.
           </h2>
           <p class="text-[#7a7067] text-sm leading-relaxed mb-4">
-            Fundada en 2015, <strong class="text-[#1a1714] font-medium">MU Real Estate</strong> nació con una misión
-            clara: democratizar el acceso a propiedades de calidad en la Ciudad de México. Nuestro equipo de más de 40
-            asesores especializados trabaja cada día para que encontrar o vender una propiedad sea una experiencia sin
-            estrés.
+            Fundada en 2015,
+            <strong class="text-[#1a1714] font-medium">MU Real Estate</strong> nació con una misión
+            clara: democratizar el acceso a propiedades de calidad en la Ciudad de México. Nuestro
+            equipo de más de 40 asesores especializados trabaja cada día para que encontrar o vender
+            una propiedad sea una experiencia sin estrés.
           </p>
           <p class="text-[#7a7067] text-sm leading-relaxed mb-8">
-            Nos especializamos en zonas premium como Polanco, Lomas, Santa Fe, Condesa y Roma Norte, con un portafolio
-            exclusivo que rara vez se encuentra en portales masivos.
+            Nos especializamos en zonas premium como Polanco, Lomas, Santa Fe, Condesa y Roma Norte,
+            con un portafolio exclusivo que rara vez se encuentra en portales masivos.
           </p>
           <div class="grid grid-cols-2 gap-3">
             <div v-for="v in values" :key="v.title" class="bg-[#f5f2ee] rounded-md p-4">

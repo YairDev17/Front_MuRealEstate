@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ArrowRight, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-vue-next'
+import {
+  ArrowRight,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+} from 'lucide-vue-next'
 import { contactoService } from '@/services/contacto.service'
 import { SERIF } from '@/config'
 
@@ -48,12 +57,14 @@ const socialLinks = [
             Hablemos sobre tu próxima propiedad.
           </h2>
           <p class="text-[#7a7067] text-sm leading-relaxed mb-10">
-            Nuestros asesores están disponibles de lunes a viernes de 9:00 a 19:00 h y sábados de 10:00 a 14:00 h.
-            Respondemos en menos de dos horas.
+            Nuestros asesores están disponibles de lunes a viernes de 9:00 a 19:00 h y sábados de
+            10:00 a 14:00 h. Respondemos en menos de dos horas.
           </p>
           <div class="flex flex-col gap-5 mb-8">
             <div v-for="item in contactItems" :key="item.label" class="flex items-start gap-4">
-              <div class="w-10 h-10 rounded-md bg-[#f5f2ee] flex items-center justify-center text-[#7a7067] shrink-0">
+              <div
+                class="w-10 h-10 rounded-md bg-[#f5f2ee] flex items-center justify-center text-[#7a7067] shrink-0"
+              >
                 <component :is="item.icon" :size="16" />
               </div>
               <div>
@@ -78,16 +89,33 @@ const socialLinks = [
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
               <label :class="labelCls">Nombre</label>
-              <input v-model="form.nombre" type="text" required placeholder="Tu nombre completo" :class="inputCls" />
+              <input
+                v-model="form.nombre"
+                type="text"
+                required
+                placeholder="Tu nombre completo"
+                :class="inputCls"
+              />
             </div>
             <div>
               <label :class="labelCls">Teléfono</label>
-              <input v-model="form.telefono" type="tel" placeholder="+52 55 0000 0000" :class="inputCls" />
+              <input
+                v-model="form.telefono"
+                type="tel"
+                placeholder="+52 55 0000 0000"
+                :class="inputCls"
+              />
             </div>
           </div>
           <div>
             <label :class="labelCls">Correo electrónico</label>
-            <input v-model="form.correo" type="email" required placeholder="tu@correo.com" :class="inputCls" />
+            <input
+              v-model="form.correo"
+              type="email"
+              required
+              placeholder="tu@correo.com"
+              :class="inputCls"
+            />
           </div>
           <div>
             <label :class="labelCls">Mensaje</label>
@@ -105,9 +133,13 @@ const socialLinks = [
             class="w-full bg-[#1a1714] text-[#f5f2ee] rounded-md py-3.5 text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#2d2926] active:scale-[0.99] transition-all duration-200 disabled:opacity-60"
           >
             <template v-if="sent">¡Mensaje enviado! Te contactamos pronto.</template>
-            <span v-else class="flex items-center gap-2">Enviar mensaje <ArrowRight :size="14" /></span>
+            <span v-else class="flex items-center gap-2"
+              >Enviar mensaje <ArrowRight :size="14"
+            /></span>
           </button>
-          <p class="text-[#a89f95] text-xs text-center">Respondemos en menos de 2 horas en días hábiles.</p>
+          <p class="text-[#a89f95] text-xs text-center">
+            Respondemos en menos de 2 horas en días hábiles.
+          </p>
         </form>
       </div>
     </div>

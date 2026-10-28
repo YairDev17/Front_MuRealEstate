@@ -65,7 +65,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="!items.length || !p" class="rounded-lg bg-[#ede8e2] aspect-[16/6] flex items-center justify-center">
+  <div
+    v-if="!items.length || !p"
+    class="rounded-lg bg-[#ede8e2] aspect-[16/6] flex items-center justify-center"
+  >
     <p class="text-[#a89f95] text-sm">Sin propiedades destacadas en esta categoría.</p>
   </div>
 
@@ -79,7 +82,10 @@ onBeforeUnmount(() => {
       v-for="(item, i) in items"
       :key="item.id"
       class="absolute inset-0 transition-opacity duration-700"
-      :style="{ opacity: i === safeIndex ? 1 : 0, pointerEvents: i === safeIndex ? 'auto' : 'none' }"
+      :style="{
+        opacity: i === safeIndex ? 1 : 0,
+        pointerEvents: i === safeIndex ? 'auto' : 'none',
+      }"
     >
       <!-- Photo sub-slides with Ken Burns -->
       <div
@@ -103,18 +109,26 @@ onBeforeUnmount(() => {
       class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-all"
       @click.stop="favoritos.toggle(p.id)"
     >
-      <Heart :size="16" :class="favoritos.esFavorito(p.id) ? 'fill-red-400 text-red-400' : 'text-white'" />
+      <Heart
+        :size="16"
+        :class="favoritos.esFavorito(p.id) ? 'fill-red-400 text-red-400' : 'text-white'"
+      />
     </button>
 
     <!-- Tipo badge -->
     <div class="absolute top-4 left-4 z-10">
-      <span class="inline-block bg-[#b8935a] text-[#1a1714] text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-sm">
+      <span
+        class="inline-block bg-[#b8935a] text-[#1a1714] text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-sm"
+      >
         {{ p.tipo === 'venta' ? 'En Venta' : 'En Renta' }}
       </span>
     </div>
 
     <!-- Photo sub-dots -->
-    <div v-if="p.imagenes && p.imagenes.length > 1" class="absolute top-4 right-16 z-10 flex gap-1 items-center">
+    <div
+      v-if="p.imagenes && p.imagenes.length > 1"
+      class="absolute top-4 right-16 z-10 flex gap-1 items-center"
+    >
       <button
         v-for="(_, j) in p.imagenes"
         :key="j"
@@ -130,8 +144,12 @@ onBeforeUnmount(() => {
     <div class="absolute bottom-0 left-0 right-0 z-10 p-5 sm:p-7">
       <div class="flex items-end justify-between gap-4">
         <div>
-          <p class="text-white/70 text-xs flex items-center gap-1 mb-1"><MapPin :size="11" />{{ p.ubicacion }}</p>
-          <h2 class="text-white text-xl sm:text-2xl lg:text-3xl mb-2 leading-tight" :style="SERIF">{{ p.titulo }}</h2>
+          <p class="text-white/70 text-xs flex items-center gap-1 mb-1">
+            <MapPin :size="11" />{{ p.ubicacion }}
+          </p>
+          <h2 class="text-white text-xl sm:text-2xl lg:text-3xl mb-2 leading-tight" :style="SERIF">
+            {{ p.titulo }}
+          </h2>
           <div class="flex items-center gap-4 text-white/70 text-xs">
             <span class="flex items-center gap-1"><Bed :size="12" />{{ p.habitaciones }} hab.</span>
             <span class="flex items-center gap-1"><Bath :size="12" />{{ p.banos }} baños</span>
@@ -164,7 +182,10 @@ onBeforeUnmount(() => {
       <button
         v-for="(_, i) in items"
         :key="i"
-        :class="['h-1.5 rounded-full transition-all duration-300', i === safeIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40']"
+        :class="[
+          'h-1.5 rounded-full transition-all duration-300',
+          i === safeIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40',
+        ]"
         @click.stop="goTo(i)"
       />
     </div>
@@ -185,15 +206,27 @@ onBeforeUnmount(() => {
   animation: kb2 5s ease-out forwards;
 }
 @keyframes kb0 {
-  0% { transform: scale(1) translate(0%, 0%); }
-  100% { transform: scale(1.07) translate(-1.5%, -1%); }
+  0% {
+    transform: scale(1) translate(0%, 0%);
+  }
+  100% {
+    transform: scale(1.07) translate(-1.5%, -1%);
+  }
 }
 @keyframes kb1 {
-  0% { transform: scale(1.05) translate(-2%, 0%); }
-  100% { transform: scale(1) translate(1%, 1%); }
+  0% {
+    transform: scale(1.05) translate(-2%, 0%);
+  }
+  100% {
+    transform: scale(1) translate(1%, 1%);
+  }
 }
 @keyframes kb2 {
-  0% { transform: scale(1) translate(1%, 1%); }
-  100% { transform: scale(1.06) translate(-1%, -1.5%); }
+  0% {
+    transform: scale(1) translate(1%, 1%);
+  }
+  100% {
+    transform: scale(1.06) translate(-1%, -1.5%);
+  }
 }
 </style>

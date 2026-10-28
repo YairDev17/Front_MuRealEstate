@@ -14,7 +14,13 @@ export const authService = {
       return mockDelay(
         {
           token: 'mock-token-usuario',
-          usuario: { id: 1, nombre: 'María', apellido: 'Alvarado', correo: payload.correo, rol: 'usuario' },
+          usuario: {
+            id: 1,
+            nombre: 'María',
+            apellido: 'Alvarado',
+            correo: payload.correo,
+            rol: 'usuario',
+          },
         },
         1200,
       )
@@ -27,7 +33,13 @@ export const authService = {
       return mockDelay(
         {
           token: 'mock-token-admin',
-          usuario: { id: 100, nombre: 'Admin', apellido: 'MU', correo: payload.correo, rol: 'admin' },
+          usuario: {
+            id: 100,
+            nombre: 'Admin',
+            apellido: 'MU',
+            correo: payload.correo,
+            rol: 'admin',
+          },
         },
         1200,
       )

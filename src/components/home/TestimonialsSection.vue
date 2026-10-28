@@ -38,7 +38,9 @@ const testimonios = [
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <p class="text-[#a89f95] text-xs tracking-widest uppercase mb-3">Testimonios</p>
-        <h2 class="text-[#1a1714] text-3xl lg:text-4xl" :style="SERIF">Lo que dicen nuestros clientes</h2>
+        <h2 class="text-[#1a1714] text-3xl lg:text-4xl" :style="SERIF">
+          Lo que dicen nuestros clientes
+        </h2>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div

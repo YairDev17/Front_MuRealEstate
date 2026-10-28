@@ -73,7 +73,8 @@ const errorEnvio = ref('')
 
 const inputCls =
   'w-full bg-[#ede8e2] border border-transparent rounded-md px-4 py-3 text-sm text-[#1a1714] placeholder-[#a89f95] outline-none transition-all duration-200 focus:border-[#1a1714]/25 focus:bg-[#e8e3dc]'
-const noSpinCls = '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+const noSpinCls =
+  '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
 
 const chipBtn = (selected: boolean) => [
   'text-xs px-3 py-1.5 rounded-full border transition-all duration-150',
@@ -155,8 +156,14 @@ function publicarOtra() {
 
   <div v-else class="min-h-screen bg-[#f5f2ee] font-['DM_Sans',sans-serif]">
     <nav class="sticky top-0 z-40 bg-[#f5f2ee]/95 backdrop-blur-md border-b border-[#1a1714]/8">
-      <div class="max-w-screen-xl mx-auto px-5 flex items-center justify-between gap-4" style="height: 60px">
-        <button class="flex items-center shrink-0 hover:opacity-80 transition-opacity" @click="router.push('/')">
+      <div
+        class="max-w-screen-xl mx-auto px-5 flex items-center justify-between gap-4"
+        style="height: 60px"
+      >
+        <button
+          class="flex items-center shrink-0 hover:opacity-80 transition-opacity"
+          @click="router.push('/')"
+        >
           <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain" />
         </button>
         <button
@@ -190,21 +197,34 @@ function publicarOtra() {
             type="button"
             :class="[
               'flex items-center gap-2 text-xs font-medium transition-all',
-              s === step ? 'text-[#1a1714]' : s < step ? 'text-[#b8935a] cursor-pointer' : 'text-[#a89f95] cursor-default',
+              s === step
+                ? 'text-[#1a1714]'
+                : s < step
+                  ? 'text-[#b8935a] cursor-pointer'
+                  : 'text-[#a89f95] cursor-default',
             ]"
             @click="s < step && (step = s)"
           >
             <span
               :class="[
                 'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold transition-all',
-                s === step ? 'bg-[#1c2b47] text-white' : s < step ? 'bg-[#b8935a] text-white' : 'bg-[#ede8e2] text-[#a89f95]',
+                s === step
+                  ? 'bg-[#1c2b47] text-white'
+                  : s < step
+                    ? 'bg-[#b8935a] text-white'
+                    : 'bg-[#ede8e2] text-[#a89f95]',
               ]"
             >
               {{ s < step ? '✓' : s }}
             </span>
-            <span class="hidden sm:inline">{{ s === 1 ? 'Información general' : 'Bienes incluidos' }}</span>
+            <span class="hidden sm:inline">{{
+              s === 1 ? 'Información general' : 'Bienes incluidos'
+            }}</span>
           </button>
-          <div v-if="s < 2" :class="['h-px w-10 transition-all', s < step ? 'bg-[#b8935a]' : 'bg-[#1a1714]/10']" />
+          <div
+            v-if="s < 2"
+            :class="['h-px w-10 transition-all', s < step ? 'bg-[#b8935a]' : 'bg-[#1a1714]/10']"
+          />
         </div>
       </div>
 
@@ -212,7 +232,11 @@ function publicarOtra() {
         <!-- ── Left: form ── -->
         <div class="flex flex-col gap-6">
           <template v-if="step === 1">
-            <SectionCard :icon="Image" title="Fotografías" subtitle="Sube al menos una imagen de la propiedad.">
+            <SectionCard
+              :icon="Image"
+              title="Fotografías"
+              subtitle="Sube al menos una imagen de la propiedad."
+            >
               <ImageUpload v-model="form.imagenes" />
             </SectionCard>
 
@@ -259,7 +283,13 @@ function publicarOtra() {
                       <span :class="form.tipoInmueble ? 'text-[#1a1714]' : 'text-[#a89f95]'">
                         {{ form.tipoInmueble || 'Seleccionar tipo' }}
                       </span>
-                      <ChevronDown :size="14" :class="['text-[#a89f95] transition-transform', showTipoMenu ? 'rotate-180' : '']" />
+                      <ChevronDown
+                        :size="14"
+                        :class="[
+                          'text-[#a89f95] transition-transform',
+                          showTipoMenu ? 'rotate-180' : '',
+                        ]"
+                      />
                     </button>
                     <div
                       v-if="showTipoMenu"
@@ -275,7 +305,7 @@ function publicarOtra() {
                             ? 'bg-[#f5f2ee] text-[#1a1714] font-medium'
                             : 'text-[#7a7067] hover:bg-[#f5f2ee] hover:text-[#1a1714]',
                         ]"
-                        @click="(form.tipoInmueble = t), (showTipoMenu = false)"
+                        @click="((form.tipoInmueble = t), (showTipoMenu = false))"
                       >
                         {{ t }}
                       </button>
@@ -284,9 +314,14 @@ function publicarOtra() {
                 </div>
 
                 <div>
-                  <FieldLabel required>Precio {{ form.operacion === 'renta' ? '(mensual)' : '' }}</FieldLabel>
+                  <FieldLabel required
+                    >Precio {{ form.operacion === 'renta' ? '(mensual)' : '' }}</FieldLabel
+                  >
                   <div class="relative">
-                    <DollarSign :size="14" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a89f95]" />
+                    <DollarSign
+                      :size="14"
+                      class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a89f95]"
+                    />
                     <input
                       v-model="form.precio"
                       type="text"
@@ -312,11 +347,21 @@ function publicarOtra() {
               <div class="grid sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                   <FieldLabel>Calle y número</FieldLabel>
-                  <input v-model="form.calle" type="text" placeholder="Ej. Av. Reforma 123, Int. 4" :class="inputCls" />
+                  <input
+                    v-model="form.calle"
+                    type="text"
+                    placeholder="Ej. Av. Reforma 123, Int. 4"
+                    :class="inputCls"
+                  />
                 </div>
                 <div>
                   <FieldLabel required>Colonia / Fraccionamiento</FieldLabel>
-                  <input v-model="form.colonia" type="text" placeholder="Ej. Lomas de Chapultepec" :class="inputCls" />
+                  <input
+                    v-model="form.colonia"
+                    type="text"
+                    placeholder="Ej. Lomas de Chapultepec"
+                    :class="inputCls"
+                  />
                 </div>
                 <div>
                   <FieldLabel>Ciudad</FieldLabel>
@@ -335,14 +380,25 @@ function publicarOtra() {
                 <div>
                   <FieldLabel>Superficie (m²)</FieldLabel>
                   <div class="relative">
-                    <Maximize2 :size="13" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a89f95]" />
-                    <input v-model="form.m2" type="number" placeholder="420" :class="[inputCls, 'pl-9', noSpinCls]" />
+                    <Maximize2
+                      :size="13"
+                      class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a89f95]"
+                    />
+                    <input
+                      v-model="form.m2"
+                      type="number"
+                      placeholder="420"
+                      :class="[inputCls, 'pl-9', noSpinCls]"
+                    />
                   </div>
                 </div>
                 <div>
                   <FieldLabel>Antigüedad</FieldLabel>
                   <div class="relative">
-                    <CalendarDays :size="13" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a89f95]" />
+                    <CalendarDays
+                      :size="13"
+                      class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a89f95]"
+                    />
                     <input
                       v-model="form.antiguedad"
                       type="text"
@@ -389,31 +445,55 @@ function publicarOtra() {
                   class="inline-flex items-center gap-1.5 bg-[#ede8e2] text-[#1a1714] text-xs px-2.5 py-1 rounded-full"
                 >
                   {{ a }}
-                  <button class="text-[#a89f95] hover:text-[#1a1714]" @click="toggle(form.caracteristicas, a)">
+                  <button
+                    class="text-[#a89f95] hover:text-[#1a1714]"
+                    @click="toggle(form.caracteristicas, a)"
+                  >
                     <X :size="9" />
                   </button>
                 </span>
               </div>
             </SectionCard>
 
-            <SectionCard :icon="Tag" title="Tus datos de contacto" subtitle="Para que nuestro equipo pueda comunicarse contigo.">
+            <SectionCard
+              :icon="Tag"
+              title="Tus datos de contacto"
+              subtitle="Para que nuestro equipo pueda comunicarse contigo."
+            >
               <div class="grid sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                   <FieldLabel required>Nombre completo</FieldLabel>
-                  <input v-model="contacto.nombre" type="text" placeholder="Tu nombre completo" :class="inputCls" />
+                  <input
+                    v-model="contacto.nombre"
+                    type="text"
+                    placeholder="Tu nombre completo"
+                    :class="inputCls"
+                  />
                 </div>
                 <div>
                   <FieldLabel required>Teléfono</FieldLabel>
-                  <input v-model="contacto.telefono" type="tel" placeholder="+52 55 0000 0000" :class="inputCls" />
+                  <input
+                    v-model="contacto.telefono"
+                    type="tel"
+                    placeholder="+52 55 0000 0000"
+                    :class="inputCls"
+                  />
                 </div>
                 <div>
                   <FieldLabel required>Correo electrónico</FieldLabel>
-                  <input v-model="contacto.correo" type="email" placeholder="tu@correo.com" :class="inputCls" />
+                  <input
+                    v-model="contacto.correo"
+                    type="email"
+                    placeholder="tu@correo.com"
+                    :class="inputCls"
+                  />
                 </div>
               </div>
             </SectionCard>
 
-            <p v-if="errores.length" class="text-red-500 text-xs -mb-2">Falta completar: {{ errores.join(', ') }}.</p>
+            <p v-if="errores.length" class="text-red-500 text-xs -mb-2">
+              Falta completar: {{ errores.join(', ') }}.
+            </p>
 
             <button
               type="button"
@@ -443,7 +523,9 @@ function publicarOtra() {
             subtitle="Selecciona los bienes que se entregan con el inmueble."
           >
             <div v-for="cat in BIENES_CATEGORIAS" :key="cat.label" class="mb-5 last:mb-0">
-              <p class="text-[#a89f95] text-[10px] font-medium tracking-widest uppercase mb-2">{{ cat.label }}</p>
+              <p class="text-[#a89f95] text-[10px] font-medium tracking-widest uppercase mb-2">
+                {{ cat.label }}
+              </p>
               <div class="flex flex-wrap gap-2">
                 <button
                   v-for="b in cat.items"
@@ -479,7 +561,9 @@ function publicarOtra() {
                 class="inline-flex items-center gap-1.5 bg-[#ede8e2] text-[#1a1714] text-xs px-2.5 py-1 rounded-full"
               >
                 {{ b }}
-                <button class="text-[#a89f95] hover:text-[#1a1714]" @click="toggle(form.bienes, b)"><X :size="9" /></button>
+                <button class="text-[#a89f95] hover:text-[#1a1714]" @click="toggle(form.bienes, b)">
+                  <X :size="9" />
+                </button>
               </span>
             </div>
           </SectionCard>
@@ -489,7 +573,10 @@ function publicarOtra() {
         <div class="lg:sticky lg:top-24 h-fit flex flex-col gap-4">
           <div class="bg-white border border-[#1a1714]/8 rounded-md p-5">
             <h3 class="text-[#a89f95] text-xs tracking-widest uppercase mb-4">Vista previa</h3>
-            <div v-if="previewUrl" class="aspect-[4/3] rounded-md overflow-hidden bg-[#ede8e2] mb-4">
+            <div
+              v-if="previewUrl"
+              class="aspect-[4/3] rounded-md overflow-hidden bg-[#ede8e2] mb-4"
+            >
               <img :src="previewUrl" alt="preview" class="w-full h-full object-cover" />
             </div>
             <div
@@ -500,10 +587,13 @@ function publicarOtra() {
             </div>
             <p class="text-[#1a1714] text-base leading-snug mb-1" :style="SERIF">
               <template v-if="form.nombre">{{ form.nombre }}</template>
-              <span v-else class="text-[#a89f95] italic text-sm font-['DM_Sans',sans-serif]">Sin nombre</span>
+              <span v-else class="text-[#a89f95] italic text-sm font-['DM_Sans',sans-serif]"
+                >Sin nombre</span
+              >
             </p>
             <p class="text-[#a89f95] text-xs flex items-center gap-1 mb-3">
-              <MapPin :size="10" /> {{ [form.colonia, form.ciudad].filter(Boolean).join(', ') || 'Sin ubicación' }}
+              <MapPin :size="10" />
+              {{ [form.colonia, form.ciudad].filter(Boolean).join(', ') || 'Sin ubicación' }}
             </p>
             <div class="grid grid-cols-3 gap-2 mb-3">
               <div
@@ -521,13 +611,19 @@ function publicarOtra() {
             </div>
             <p v-if="form.precio" class="text-[#1a1714] text-lg" :style="SERIF">
               ${{ form.precio
-              }}<span v-if="form.operacion === 'renta'" class="text-[#a89f95] text-sm font-['DM_Sans',sans-serif]"> / mes</span>
+              }}<span
+                v-if="form.operacion === 'renta'"
+                class="text-[#a89f95] text-sm font-['DM_Sans',sans-serif]"
+              >
+                / mes</span
+              >
             </p>
           </div>
 
           <div class="bg-[#b8935a]/10 border border-[#b8935a]/30 rounded-md p-4">
             <p class="text-[#7a7067] text-xs leading-relaxed">
-              Tu propiedad será enviada a nuestro equipo de revisión. Te contactaremos en un plazo de
+              Tu propiedad será enviada a nuestro equipo de revisión. Te contactaremos en un plazo
+              de
               <strong class="text-[#1a1714]">24–48 h hábiles</strong>.
             </p>
           </div>

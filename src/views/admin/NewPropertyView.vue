@@ -74,7 +74,8 @@ const smallInputCls =
   'flex-1 bg-white/4 border border-white/8 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-white/20'
 const labelCls = 'text-white/40 text-xs font-medium tracking-widest uppercase mb-1.5 block'
 const sectionCls = 'bg-white/2 border border-white/6 rounded-2xl p-6'
-const noSpinCls = '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+const noSpinCls =
+  '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
 
 const chipBtn = (selected: boolean) => [
   'text-xs px-3 py-1.5 rounded-full border transition-all duration-150',
@@ -113,7 +114,10 @@ async function handleSave() {
   try {
     await adminPropiedadesService.crearDesdeFormulario(
       { ...form },
-      { estado: estadoInicial.value, agente: auth.usuario ? `${auth.usuario.nombre} ${auth.usuario.apellido}` : 'Administrador' },
+      {
+        estado: estadoInicial.value,
+        agente: auth.usuario ? `${auth.usuario.nombre} ${auth.usuario.apellido}` : 'Administrador',
+      },
     )
     saved.value = true
     setTimeout(() => router.push('/admin/panel'), 1400)
@@ -128,12 +132,17 @@ async function handleSave() {
 <template>
   <div class="min-h-screen bg-[#0d0d0c] font-['DM_Sans',sans-serif]">
     <nav class="sticky top-0 z-40 bg-[#111210]/90 backdrop-blur-md border-b border-white/6">
-      <div class="max-w-screen-xl mx-auto px-5 flex items-center justify-between gap-4" style="height: 60px">
+      <div
+        class="max-w-screen-xl mx-auto px-5 flex items-center justify-between gap-4"
+        style="height: 60px"
+      >
         <div class="flex items-center gap-3">
           <div class="w-7 h-7 rounded-full border border-white/15 flex items-center justify-center">
             <ShieldCheck :size="13" class="text-white/60" />
           </div>
-          <span class="text-white/50 text-sm tracking-widest uppercase" :style="SERIF">MU Real Estate · Admin</span>
+          <span class="text-white/50 text-sm tracking-widest uppercase" :style="SERIF"
+            >MU Real Estate · Admin</span
+          >
         </div>
         <button
           class="flex items-center gap-2 text-white/30 hover:text-white/60 text-sm transition-colors"
@@ -153,7 +162,9 @@ async function handleSave() {
           <ArrowLeft :size="12" /> Panel
         </button>
         <h1 class="text-white text-2xl" :style="SERIF">Nueva Propiedad</h1>
-        <p class="text-white/30 text-sm mt-1">Completa la información para publicar la propiedad en el portafolio.</p>
+        <p class="text-white/30 text-sm mt-1">
+          Completa la información para publicar la propiedad en el portafolio.
+        </p>
       </div>
 
       <div class="grid lg:grid-cols-[1fr_320px] gap-8">
@@ -175,7 +186,12 @@ async function handleSave() {
             <div class="flex flex-col gap-5">
               <div>
                 <label :class="labelCls">Nombre de la propiedad</label>
-                <input v-model="form.nombre" type="text" placeholder="Ej. Casa Contemporánea en Lomas" :class="inputCls" />
+                <input
+                  v-model="form.nombre"
+                  type="text"
+                  placeholder="Ej. Casa Contemporánea en Lomas"
+                  :class="inputCls"
+                />
               </div>
 
               <div>
@@ -200,10 +216,14 @@ async function handleSave() {
 
               <div>
                 <label :class="labelCls">
-                  Precio {{ form.operacion === 'renta' ? '(mensual)' : '' }}{{ form.operacion === 'preventa' ? '(desde)' : '' }}
+                  Precio {{ form.operacion === 'renta' ? '(mensual)' : ''
+                  }}{{ form.operacion === 'preventa' ? '(desde)' : '' }}
                 </label>
                 <div class="relative">
-                  <DollarSign :size="14" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20" />
+                  <DollarSign
+                    :size="14"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20"
+                  />
                   <input
                     v-model="form.precio"
                     type="text"
@@ -233,7 +253,12 @@ async function handleSave() {
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label :class="labelCls">Colonia / Fraccionamiento</label>
-                <input v-model="form.colonia" type="text" placeholder="Ej. Lomas de Chapultepec" :class="inputCls" />
+                <input
+                  v-model="form.colonia"
+                  type="text"
+                  placeholder="Ej. Lomas de Chapultepec"
+                  :class="inputCls"
+                />
               </div>
               <div>
                 <label :class="labelCls">Ciudad</label>
@@ -245,26 +270,54 @@ async function handleSave() {
           <section :class="sectionCls">
             <div class="flex items-center gap-2.5 mb-5">
               <Bed :size="15" class="text-white/30" />
-              <h2 class="text-white/70 text-sm font-medium tracking-wide">Características técnicas</h2>
+              <h2 class="text-white/70 text-sm font-medium tracking-wide">
+                Características técnicas
+              </h2>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
-              <NumberInput v-model="form.habitaciones" :icon="Bed" label="Habitaciones" variant="dark" />
+              <NumberInput
+                v-model="form.habitaciones"
+                :icon="Bed"
+                label="Habitaciones"
+                variant="dark"
+              />
               <NumberInput v-model="form.banos" :icon="Bath" label="Baños" variant="dark" />
-              <NumberInput v-model="form.estacionamientos" :icon="Car" label="Estacionamientos" variant="dark" />
+              <NumberInput
+                v-model="form.estacionamientos"
+                :icon="Car"
+                label="Estacionamientos"
+                variant="dark"
+              />
             </div>
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label :class="labelCls">Superficie (m²)</label>
                 <div class="relative">
-                  <Maximize2 :size="13" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20" />
-                  <input v-model="form.m2" type="number" placeholder="420" :class="[inputCls, 'pl-9', noSpinCls]" />
+                  <Maximize2
+                    :size="13"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20"
+                  />
+                  <input
+                    v-model="form.m2"
+                    type="number"
+                    placeholder="420"
+                    :class="[inputCls, 'pl-9', noSpinCls]"
+                  />
                 </div>
               </div>
               <div>
                 <label :class="labelCls">Antigüedad</label>
                 <div class="relative">
-                  <CalendarDays :size="13" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20" />
-                  <input v-model="form.antiguedad" type="text" placeholder="Ej. 5 años · Obra nueva" :class="[inputCls, 'pl-9']" />
+                  <CalendarDays
+                    :size="13"
+                    class="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/20"
+                  />
+                  <input
+                    v-model="form.antiguedad"
+                    type="text"
+                    placeholder="Ej. 5 años · Obra nueva"
+                    :class="[inputCls, 'pl-9']"
+                  />
                 </div>
               </div>
             </div>
@@ -273,7 +326,9 @@ async function handleSave() {
           <section :class="sectionCls">
             <div class="flex items-center gap-2.5 mb-5">
               <CheckCircle2 :size="15" class="text-white/30" />
-              <h2 class="text-white/70 text-sm font-medium tracking-wide">Amenidades y características</h2>
+              <h2 class="text-white/70 text-sm font-medium tracking-wide">
+                Amenidades y características
+              </h2>
             </div>
             <div class="flex flex-wrap gap-2 mb-4">
               <button
@@ -309,7 +364,12 @@ async function handleSave() {
                 class="inline-flex items-center gap-1.5 bg-white/8 text-white/60 text-xs px-2.5 py-1 rounded-full"
               >
                 {{ c }}
-                <button class="text-white/30 hover:text-white/60" @click="toggle(form.caracteristicas, c)"><X :size="9" /></button>
+                <button
+                  class="text-white/30 hover:text-white/60"
+                  @click="toggle(form.caracteristicas, c)"
+                >
+                  <X :size="9" />
+                </button>
               </span>
             </div>
           </section>
@@ -323,7 +383,9 @@ async function handleSave() {
               Selecciona los bienes muebles o instalaciones que se entregan con el inmueble.
             </p>
             <div v-for="cat in BIENES_CATEGORIAS" :key="cat.label" class="mb-5 last:mb-0">
-              <p class="text-white/30 text-[10px] font-medium tracking-widest uppercase mb-2">{{ cat.label }}</p>
+              <p class="text-white/30 text-[10px] font-medium tracking-widest uppercase mb-2">
+                {{ cat.label }}
+              </p>
               <div class="flex flex-wrap gap-2">
                 <button
                   v-for="b in cat.items"
@@ -359,7 +421,9 @@ async function handleSave() {
                 class="inline-flex items-center gap-1.5 bg-white/8 text-white/60 text-xs px-2.5 py-1 rounded-full"
               >
                 {{ b }}
-                <button class="text-white/30 hover:text-white/60" @click="toggle(form.bienes, b)"><X :size="9" /></button>
+                <button class="text-white/30 hover:text-white/60" @click="toggle(form.bienes, b)">
+                  <X :size="9" />
+                </button>
               </span>
             </div>
           </section>
@@ -383,7 +447,8 @@ async function handleSave() {
               <span v-else class="text-white/20 italic text-sm">Sin nombre</span>
             </p>
             <p class="text-white/30 text-xs flex items-center gap-1 mb-3">
-              <MapPin :size="10" /> {{ [form.colonia, form.ciudad].filter(Boolean).join(', ') || 'Sin ubicación' }}
+              <MapPin :size="10" />
+              {{ [form.colonia, form.ciudad].filter(Boolean).join(', ') || 'Sin ubicación' }}
             </p>
             <div class="grid grid-cols-3 gap-2 mb-3">
               <div
@@ -400,24 +465,43 @@ async function handleSave() {
               </div>
             </div>
             <p v-if="form.precio" class="text-white text-lg" :style="SERIF">
-              ${{ form.precio }}<span v-if="form.operacion === 'renta'" class="text-white/30 text-sm"> / mes</span>
+              ${{ form.precio
+              }}<span v-if="form.operacion === 'renta'" class="text-white/30 text-sm"> / mes</span>
             </p>
           </div>
 
           <div class="bg-white/2 border border-white/6 rounded-2xl p-5">
             <h3 class="text-white/50 text-xs tracking-widest uppercase mb-3">Estado inicial</h3>
             <div class="flex flex-col gap-2">
-              <label v-for="e in ESTADOS_INICIALES" :key="e.val" class="flex items-center gap-2.5 cursor-pointer group">
-                <input v-model="estadoInicial" type="radio" name="estado" :value="e.val" class="hidden" />
+              <label
+                v-for="e in ESTADOS_INICIALES"
+                :key="e.val"
+                class="flex items-center gap-2.5 cursor-pointer group"
+              >
+                <input
+                  v-model="estadoInicial"
+                  type="radio"
+                  name="estado"
+                  :value="e.val"
+                  class="hidden"
+                />
                 <div
                   :class="[
                     'w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center',
                     estadoInicial === e.val ? 'border-white/50' : 'border-white/15',
                   ]"
                 >
-                  <div :class="['w-1.5 h-1.5 rounded-full', e.dot, estadoInicial === e.val ? 'opacity-100' : 'opacity-0']" />
+                  <div
+                    :class="[
+                      'w-1.5 h-1.5 rounded-full',
+                      e.dot,
+                      estadoInicial === e.val ? 'opacity-100' : 'opacity-0',
+                    ]"
+                  />
                 </div>
-                <span class="text-white/40 text-sm group-hover:text-white/60 transition-colors">{{ e.label }}</span>
+                <span class="text-white/40 text-sm group-hover:text-white/60 transition-colors">{{
+                  e.label
+                }}</span>
               </label>
             </div>
           </div>
@@ -430,7 +514,9 @@ async function handleSave() {
             @click="handleSave"
           >
             <LoadingDots v-if="saving" dot-class="bg-[#0d0d0c]/50" />
-            <template v-else-if="saved"><CheckCircle2 :size="15" class="text-emerald-600" /> Propiedad guardada</template>
+            <template v-else-if="saved"
+              ><CheckCircle2 :size="15" class="text-emerald-600" /> Propiedad guardada</template
+            >
             <template v-else>Guardar propiedad</template>
           </button>
           <button

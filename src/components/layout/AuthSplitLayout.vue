@@ -26,7 +26,11 @@ withDefaults(
     <div class="relative hidden lg:flex lg:w-1/2 xl:w-[55%] flex-col">
       <div
         :class="['absolute inset-0', imageBgClass]"
-        :style="{ backgroundImage: `url('${image}')`, backgroundSize: 'cover', backgroundPosition: imagePosition }"
+        :style="{
+          backgroundImage: `url('${image}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: imagePosition,
+        }"
       />
       <div :class="['absolute inset-0 bg-gradient-to-br', overlayClass]" />
       <div class="relative z-10 flex flex-col justify-between h-full p-10 xl:p-14">

@@ -34,10 +34,14 @@ interface RequestOptions {
 }
 
 function buildUrl(path: string, query?: Query) {
-  const url = new URL(`${BASE_URL}${path.startsWith('/') ? path : `/${path}`}`, window.location.origin)
+  const url = new URL(
+    `${BASE_URL}${path.startsWith('/') ? path : `/${path}`}`,
+    window.location.origin,
+  )
   if (query) {
     for (const [key, value] of Object.entries(query)) {
-      if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, String(value))
+      if (value !== undefined && value !== null && value !== '')
+        url.searchParams.set(key, String(value))
     }
   }
   return url.toString()
@@ -64,7 +68,8 @@ export async function http<T>(path: string, options: RequestOptions = {}): Promi
 
   if (!res.ok) {
     const message =
-      (data && typeof data === 'object' && 'message' in data && String(data.message)) || res.statusText
+      (data && typeof data === 'object' && 'message' in data && String(data.message)) ||
+      res.statusText
     throw new ApiError(res.status, message, data)
   }
   return data as T

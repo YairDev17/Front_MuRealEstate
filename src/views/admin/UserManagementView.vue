@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Check, Edit2, Lock, MoreHorizontal, Plus, Search, Settings, Shield, Trash2, UserCheck, UserX, Users, X } from 'lucide-vue-next'
+import {
+  Check,
+  Edit2,
+  Lock,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Settings,
+  Shield,
+  Trash2,
+  UserCheck,
+  UserX,
+  Users,
+  X,
+} from 'lucide-vue-next'
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import AdminLogoutActions from '@/components/admin/AdminLogoutActions.vue'
 import UserModal from '@/components/admin/UserModal.vue'
@@ -36,13 +50,26 @@ const filtrados = computed(() => {
 
 const stats = computed(() => [
   { label: 'Total usuarios', value: usuarios.value.length, color: 'text-white/50', icon: Users },
-  { label: 'Activos', value: usuarios.value.filter((u) => u.estado === 'activo').length, color: 'text-emerald-400', icon: UserCheck },
-  { label: 'Suspendidos', value: usuarios.value.filter((u) => u.estado === 'suspendido').length, color: 'text-red-400', icon: UserX },
+  {
+    label: 'Activos',
+    value: usuarios.value.filter((u) => u.estado === 'activo').length,
+    color: 'text-emerald-400',
+    icon: UserCheck,
+  },
+  {
+    label: 'Suspendidos',
+    value: usuarios.value.filter((u) => u.estado === 'suspendido').length,
+    color: 'text-red-400',
+    icon: UserX,
+  },
   { label: 'Roles definidos', value: ROLES_KEYS.length, color: 'text-purple-400', icon: Lock },
 ])
 
 const grupos = [...new Set(PERMISOS_CATALOGO.map((p) => p.grupo))]
-const filtrosRol: [RolAdmin | 'todos', string][] = [['todos', 'Todos'], ...ROLES_KEYS.map((k) => [k, ROLES[k].label] as [RolAdmin, string])]
+const filtrosRol: [RolAdmin | 'todos', string][] = [
+  ['todos', 'Todos'],
+  ...ROLES_KEYS.map((k) => [k, ROLES[k].label] as [RolAdmin, string]),
+]
 
 const initials = (name: string) =>
   name
@@ -74,14 +101,22 @@ async function handleDelete(id: number) {
 
 async function handleToggleEstado(u: UsuarioAdmin) {
   menuOpen.value = null
-  const actualizado = await adminUsuariosService.actualizar(u.id, { estado: u.estado === 'activo' ? 'suspendido' : 'activo' })
+  const actualizado = await adminUsuariosService.actualizar(u.id, {
+    estado: u.estado === 'activo' ? 'suspendido' : 'activo',
+  })
   usuarios.value = usuarios.value.map((x) => (x.id === u.id ? actualizado : x))
 }
 </script>
 
 <template>
   <div class="min-h-screen bg-[#0d0d0c] font-['DM_Sans',sans-serif]">
-    <UserModal v-if="modal.open" :usuario="modal.usuario" :mode="modal.mode" @close="cerrarModal" @save="handleSave" />
+    <UserModal
+      v-if="modal.open"
+      :usuario="modal.usuario"
+      :mode="modal.mode"
+      @close="cerrarModal"
+      @save="handleSave"
+    />
 
     <AdminTopBar section="Usuarios & Roles" wide>
       <template #actions><AdminLogoutActions /></template>
@@ -91,7 +126,9 @@ async function handleToggleEstado(u: UsuarioAdmin) {
       <div class="flex items-start justify-between mb-6 gap-4 flex-wrap">
         <div>
           <h1 class="text-white text-2xl mb-1" :style="SERIF">Gestión de Usuarios</h1>
-          <p class="text-white/30 text-sm">Administra usuarios, roles y permisos de acceso al sistema.</p>
+          <p class="text-white/30 text-sm">
+            Administra usuarios, roles y permisos de acceso al sistema.
+          </p>
         </div>
         <button
           class="flex items-center gap-2 bg-white text-[#0d0d0c] text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-white/90 transition-all"
@@ -102,9 +139,15 @@ async function handleToggleEstado(u: UsuarioAdmin) {
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div v-for="s in stats" :key="s.label" class="bg-white/3 border border-white/6 rounded-xl px-4 py-4">
+        <div
+          v-for="s in stats"
+          :key="s.label"
+          class="bg-white/3 border border-white/6 rounded-xl px-4 py-4"
+        >
           <div :class="['flex items-center gap-2 mb-2', s.color]">
-            <component :is="s.icon" :size="13" /><span class="text-xs opacity-80">{{ s.label }}</span>
+            <component :is="s.icon" :size="13" /><span class="text-xs opacity-80">{{
+              s.label
+            }}</span>
           </div>
           <p class="text-white text-2xl font-medium" :style="SERIF">{{ s.value }}</p>
         </div>
@@ -119,7 +162,9 @@ async function handleToggleEstado(u: UsuarioAdmin) {
           :key="t.val"
           :class="[
             'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-150 -mb-px',
-            tab === t.val ? 'border-white/60 text-white/80' : 'border-transparent text-white/30 hover:text-white/50 hover:border-white/20',
+            tab === t.val
+              ? 'border-white/60 text-white/80'
+              : 'border-transparent text-white/30 hover:text-white/50 hover:border-white/20',
           ]"
           @click="tab = t.val"
         >
@@ -129,7 +174,9 @@ async function handleToggleEstado(u: UsuarioAdmin) {
 
       <template v-if="tab === 'usuarios'">
         <div class="flex flex-wrap items-center gap-3 mb-5">
-          <div class="flex items-center bg-white/5 border border-white/8 rounded-lg px-3 py-2 gap-2 w-60">
+          <div
+            class="flex items-center bg-white/5 border border-white/8 rounded-lg px-3 py-2 gap-2 w-60"
+          >
             <Search :size="13" class="text-white/20 shrink-0" />
             <input
               v-model="search"
@@ -159,13 +206,29 @@ async function handleToggleEstado(u: UsuarioAdmin) {
           <table class="w-full">
             <thead>
               <tr class="border-b border-white/6">
-                <th class="text-left px-5 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium">Usuario</th>
-                <th class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden sm:table-cell">Rol</th>
-                <th class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden md:table-cell">Estado</th>
-                <th class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden lg:table-cell">
+                <th
+                  class="text-left px-5 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium"
+                >
+                  Usuario
+                </th>
+                <th
+                  class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden sm:table-cell"
+                >
+                  Rol
+                </th>
+                <th
+                  class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden md:table-cell"
+                >
+                  Estado
+                </th>
+                <th
+                  class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden lg:table-cell"
+                >
                   Último acceso
                 </th>
-                <th class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden xl:table-cell">
+                <th
+                  class="text-left px-4 py-3.5 text-white/25 text-xs tracking-widest uppercase font-medium hidden xl:table-cell"
+                >
                   Permisos
                 </th>
                 <th class="px-4 py-3.5" />
@@ -175,11 +238,16 @@ async function handleToggleEstado(u: UsuarioAdmin) {
               <tr
                 v-for="(u, idx) in filtrados"
                 :key="u.id"
-                :class="['border-b border-white/4 hover:bg-white/3 transition-all', idx === filtrados.length - 1 ? 'border-b-0' : '']"
+                :class="[
+                  'border-b border-white/4 hover:bg-white/3 transition-all',
+                  idx === filtrados.length - 1 ? 'border-b-0' : '',
+                ]"
               >
                 <td class="px-5 py-4">
                   <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-white/8 flex items-center justify-center text-xs text-white/50 font-medium shrink-0">
+                    <div
+                      class="w-8 h-8 rounded-full bg-white/8 flex items-center justify-center text-xs text-white/50 font-medium shrink-0"
+                    >
                       {{ initials(u.nombre) }}
                     </div>
                     <div>
@@ -189,20 +257,31 @@ async function handleToggleEstado(u: UsuarioAdmin) {
                   </div>
                 </td>
                 <td class="px-4 py-4 hidden sm:table-cell">
-                  <span :class="['inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border', ROLES[u.rol].bg, ROLES[u.rol].color]">
+                  <span
+                    :class="[
+                      'inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border',
+                      ROLES[u.rol].bg,
+                      ROLES[u.rol].color,
+                    ]"
+                  >
                     <component :is="ROLES[u.rol].icon" :size="11" /> {{ ROLES[u.rol].label }}
                   </span>
                 </td>
                 <td class="px-4 py-4 hidden md:table-cell">
-                  <span :class="['flex items-center gap-1.5 text-xs', ESTADOS_USUARIO[u.estado].text]">
-                    <span :class="['w-1.5 h-1.5 rounded-full', ESTADOS_USUARIO[u.estado].dot]" /> {{ ESTADOS_USUARIO[u.estado].label }}
+                  <span
+                    :class="['flex items-center gap-1.5 text-xs', ESTADOS_USUARIO[u.estado].text]"
+                  >
+                    <span :class="['w-1.5 h-1.5 rounded-full', ESTADOS_USUARIO[u.estado].dot]" />
+                    {{ ESTADOS_USUARIO[u.estado].label }}
                   </span>
                 </td>
                 <td class="px-4 py-4 hidden lg:table-cell">
                   <span class="text-white/25 text-xs">{{ u.ultimoAcceso }}</span>
                 </td>
                 <td class="px-4 py-4 hidden xl:table-cell">
-                  <span class="text-white/30 text-xs">{{ u.permisos.length }} / {{ PERMISOS_CATALOGO.length }}</span>
+                  <span class="text-white/30 text-xs"
+                    >{{ u.permisos.length }} / {{ PERMISOS_CATALOGO.length }}</span
+                  >
                 </td>
                 <td class="px-4 py-4 text-right relative">
                   <button
@@ -217,7 +296,9 @@ async function handleToggleEstado(u: UsuarioAdmin) {
                   >
                     <button
                       class="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-white/50 hover:text-white/80 hover:bg-white/5 transition-all"
-                      @click="(modal = { open: true, usuario: u, mode: 'edit' }), (menuOpen = null)"
+                      @click="
+                        ((modal = { open: true, usuario: u, mode: 'edit' }), (menuOpen = null))
+                      "
                     >
                       <Edit2 :size="12" /> Editar usuario
                     </button>
@@ -248,20 +329,34 @@ async function handleToggleEstado(u: UsuarioAdmin) {
       </template>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div v-for="rol in ROLES_KEYS" :key="rol" class="bg-white/3 border border-white/6 rounded-2xl p-5">
+        <div
+          v-for="rol in ROLES_KEYS"
+          :key="rol"
+          class="bg-white/3 border border-white/6 rounded-2xl p-5"
+        >
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-3">
-              <div :class="['w-8 h-8 rounded-xl border flex items-center justify-center', ROLES[rol].bg, ROLES[rol].color]">
+              <div
+                :class="[
+                  'w-8 h-8 rounded-xl border flex items-center justify-center',
+                  ROLES[rol].bg,
+                  ROLES[rol].color,
+                ]"
+              >
                 <component :is="ROLES[rol].icon" :size="11" />
               </div>
               <div>
                 <p :class="['text-sm font-medium', ROLES[rol].color]">{{ ROLES[rol].label }}</p>
                 <p class="text-white/25 text-xs">
-                  {{ usuarios.filter((u) => u.rol === rol).length }} usuario{{ usuarios.filter((u) => u.rol === rol).length !== 1 ? 's' : '' }}
+                  {{ usuarios.filter((u) => u.rol === rol).length }} usuario{{
+                    usuarios.filter((u) => u.rol === rol).length !== 1 ? 's' : ''
+                  }}
                 </p>
               </div>
             </div>
-            <button class="p-1.5 rounded-lg text-white/20 hover:text-white/50 hover:bg-white/5 transition-all">
+            <button
+              class="p-1.5 rounded-lg text-white/20 hover:text-white/50 hover:bg-white/5 transition-all"
+            >
               <Settings :size="13" />
             </button>
           </div>

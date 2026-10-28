@@ -32,17 +32,23 @@ const cfg = computed(() => ESTADO_PROPIEDAD[props.p.estado])
         </span>
       </div>
       <div class="absolute top-2.5 right-2.5">
-        <span class="inline-block bg-black/50 backdrop-blur-sm text-white/70 text-[10px] px-2 py-1 rounded-full uppercase tracking-wider">
+        <span
+          class="inline-block bg-black/50 backdrop-blur-sm text-white/70 text-[10px] px-2 py-1 rounded-full uppercase tracking-wider"
+        >
           {{ p.tipo === 'venta' ? 'Venta' : 'Renta' }}
         </span>
       </div>
       <div class="absolute bottom-2.5 left-2.5 right-2.5">
-        <p class="text-white text-sm font-medium leading-tight line-clamp-1" :style="SERIF">{{ p.titulo }}</p>
+        <p class="text-white text-sm font-medium leading-tight line-clamp-1" :style="SERIF">
+          {{ p.titulo }}
+        </p>
       </div>
     </div>
 
     <div class="p-3.5">
-      <p class="text-white/40 text-xs flex items-center gap-1 mb-3 truncate"><MapPin :size="10" /> {{ p.colonia }}</p>
+      <p class="text-white/40 text-xs flex items-center gap-1 mb-3 truncate">
+        <MapPin :size="10" /> {{ p.colonia }}
+      </p>
       <div class="flex items-center gap-3 text-white/30 text-xs mb-3">
         <span class="flex items-center gap-1"><Bed :size="10" /> {{ p.habitaciones }}</span>
         <span class="flex items-center gap-1"><Bath :size="10" /> {{ p.banos }}</span>
@@ -59,13 +65,18 @@ const cfg = computed(() => ESTADO_PROPIEDAD[props.p.estado])
       </div>
       <div class="mt-3 pt-3 border-t border-white/6 flex items-center justify-between">
         <div class="flex items-center gap-1.5">
-          <div class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[9px] text-white/50 font-medium">
+          <div
+            class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[9px] text-white/50 font-medium"
+          >
             {{ iniciales(p.agente) }}
           </div>
           <span class="text-white/30 text-xs">{{ p.agente }}</span>
         </div>
         <div class="flex items-center gap-2">
-          <span v-if="p.visitas !== undefined" class="text-white/25 text-xs flex items-center gap-1">
+          <span
+            v-if="p.visitas !== undefined"
+            class="text-white/25 text-xs flex items-center gap-1"
+          >
             <Eye :size="9" /> {{ p.visitas }}
           </span>
           <span class="text-white/20 text-[10px]">{{ p.fechaIngreso }}</span>

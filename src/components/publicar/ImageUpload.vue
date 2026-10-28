@@ -60,19 +60,33 @@ const dark = computed(() => props.variant === 'dark')
       @drop.prevent="onDrop"
       @click="inputRef?.click()"
     >
-      <div :class="['w-10 h-10 rounded-full flex items-center justify-center', dark ? 'bg-white/8' : 'bg-[#ede8e2]']">
+      <div
+        :class="[
+          'w-10 h-10 rounded-full flex items-center justify-center',
+          dark ? 'bg-white/8' : 'bg-[#ede8e2]',
+        ]"
+      >
         <Upload :size="18" :class="dark ? 'text-white/40' : 'text-[#a89f95]'" />
       </div>
       <div class="text-center">
         <p :class="dark ? 'text-white/60 text-sm font-medium' : 'text-[#7a7067] text-sm'">
           Arrastra imágenes aquí o
-          <span :class="['underline underline-offset-2', dark ? 'text-white/80' : 'text-[#1a1714]']">selecciona archivos</span>
+          <span :class="['underline underline-offset-2', dark ? 'text-white/80' : 'text-[#1a1714]']"
+            >selecciona archivos</span
+          >
         </p>
         <p :class="['text-xs mt-1', dark ? 'text-white/25' : 'text-[#a89f95]']">
           JPG, PNG, WEBP · Máximo {{ MAX_IMAGENES }} imágenes
         </p>
       </div>
-      <input ref="inputRef" type="file" accept="image/*" multiple class="hidden" @change="handleFiles(($event.target as HTMLInputElement).files)" />
+      <input
+        ref="inputRef"
+        type="file"
+        accept="image/*"
+        multiple
+        class="hidden"
+        @change="handleFiles(($event.target as HTMLInputElement).files)"
+      />
     </div>
 
     <div v-if="previews.length" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2.5">
@@ -111,7 +125,9 @@ const dark = computed(() => props.variant === 'dark')
         type="button"
         :class="[
           'aspect-[4/3] border-2 border-dashed flex items-center justify-center transition-all',
-          dark ? 'rounded-lg border-white/10 hover:border-white/20' : 'rounded-md border-[#1a1714]/12 hover:border-[#1a1714]/25',
+          dark
+            ? 'rounded-lg border-white/10 hover:border-white/20'
+            : 'rounded-md border-[#1a1714]/12 hover:border-[#1a1714]/25',
         ]"
         @click="inputRef?.click()"
       >

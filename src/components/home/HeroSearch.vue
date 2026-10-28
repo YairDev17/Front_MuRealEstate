@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { ChevronDown, Search, X } from 'lucide-vue-next'
 
-export type Servicio = 'Compra' | 'Venta' | 'Renta' | 'Administración' | 'Construcción' | 'Remodelación'
+export type Servicio =
+  'Compra' | 'Venta' | 'Renta' | 'Administración' | 'Construcción' | 'Remodelación'
 export type TipoInmueble = 'Terrenos' | 'Casas' | 'Departamentos'
 
 export interface BusquedaHome {
@@ -11,7 +12,14 @@ export interface BusquedaHome {
   tipoInmueble: TipoInmueble | null
 }
 
-const SERVICIOS: Servicio[] = ['Compra', 'Venta', 'Renta', 'Administración', 'Construcción', 'Remodelación']
+const SERVICIOS: Servicio[] = [
+  'Compra',
+  'Venta',
+  'Renta',
+  'Administración',
+  'Construcción',
+  'Remodelación',
+]
 const TIPOS_INMUEBLE: TipoInmueble[] = ['Terrenos', 'Casas', 'Departamentos']
 
 const emit = defineEmits<{ buscar: [BusquedaHome] }>()
@@ -21,7 +29,8 @@ const tipoInmueble = ref<TipoInmueble | null>(null)
 const query = ref('')
 const showTipoMenu = ref(false)
 
-const buscar = () => emit('buscar', { q: query.value, servicio: servicio.value, tipoInmueble: tipoInmueble.value })
+const buscar = () =>
+  emit('buscar', { q: query.value, servicio: servicio.value, tipoInmueble: tipoInmueble.value })
 
 function setTipo(t: TipoInmueble | null) {
   tipoInmueble.value = t
@@ -49,7 +58,10 @@ function setServicio(s: Servicio) {
             {{ tipoInmueble ?? 'Tipo de inmueble' }}
             <ChevronDown
               :size="14"
-              :class="['text-[#a89f95] transition-transform duration-200', showTipoMenu ? 'rotate-180' : '']"
+              :class="[
+                'text-[#a89f95] transition-transform duration-200',
+                showTipoMenu ? 'rotate-180' : '',
+              ]"
             />
           </button>
           <div
@@ -109,7 +121,9 @@ function setServicio(s: Servicio) {
           :key="s"
           :class="[
             'shrink-0 px-4 py-1.5 rounded-sm text-xs font-medium transition-all duration-150 whitespace-nowrap',
-            servicio === s ? 'bg-[#1c2b47] text-[#f5f2ee]' : 'text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2]',
+            servicio === s
+              ? 'bg-[#1c2b47] text-[#f5f2ee]'
+              : 'text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2]',
           ]"
           @click="setServicio(s)"
         >
@@ -117,7 +131,9 @@ function setServicio(s: Servicio) {
         </button>
         <template v-if="tipoInmueble">
           <div class="w-px h-4 bg-[#1a1714]/10 mx-2 shrink-0" />
-          <span class="shrink-0 inline-flex items-center gap-1.5 bg-[#ede8e2] text-[#1a1714] text-xs px-2.5 py-1.5 rounded-sm">
+          <span
+            class="shrink-0 inline-flex items-center gap-1.5 bg-[#ede8e2] text-[#1a1714] text-xs px-2.5 py-1.5 rounded-sm"
+          >
             {{ tipoInmueble }}
             <button class="hover:text-[#b8935a] transition-colors" @click="setTipo(null)">
               <X :size="10" />

@@ -26,7 +26,8 @@ async function handleSubmit() {
   error.value = ''
   try {
     await auth.loginAdmin({ correo: email.value, password: password.value })
-    const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/admin/panel'
+    const redirect =
+      typeof route.query.redirect === 'string' ? route.query.redirect : '/admin/panel'
     router.push(redirect)
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'No se pudo iniciar sesión.'
@@ -45,8 +46,14 @@ async function handleSubmit() {
   >
     <template #logo>
       <div class="flex items-center gap-3">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-14 w-auto object-contain brightness-0 invert opacity-90" />
-        <span class="text-white/50 text-xs font-medium tracking-widest uppercase flex items-center gap-1.5">
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-14 w-auto object-contain brightness-0 invert opacity-90"
+        />
+        <span
+          class="text-white/50 text-xs font-medium tracking-widest uppercase flex items-center gap-1.5"
+        >
           <ShieldCheck :size="11" class="text-white/40" /> Admin
         </span>
       </div>
@@ -62,16 +69,24 @@ async function handleSubmit() {
     </template>
     <template #mobile-logo>
       <div class="flex items-center gap-2.5 mb-10 lg:hidden">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-14 w-auto object-contain brightness-0 invert opacity-80" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-14 w-auto object-contain brightness-0 invert opacity-80"
+        />
         <span class="text-white/40 text-xs tracking-widest uppercase flex items-center gap-1">
           <ShieldCheck :size="10" class="text-white/30" /> Admin
         </span>
       </div>
     </template>
 
-    <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 mb-8">
+    <div
+      class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 mb-8"
+    >
       <ShieldCheck :size="12" class="text-[#b8935a]" />
-      <span class="text-[#b8935a] text-xs tracking-widest uppercase font-medium">Acceso administrador</span>
+      <span class="text-[#b8935a] text-xs tracking-widest uppercase font-medium"
+        >Acceso administrador</span
+      >
     </div>
 
     <div class="mb-10">
@@ -96,7 +111,10 @@ async function handleSubmit() {
 
       <div class="flex flex-col gap-1.5">
         <div class="flex items-center justify-between">
-          <label for="admin-password" class="text-white/50 text-xs font-medium tracking-wider uppercase">
+          <label
+            for="admin-password"
+            class="text-white/50 text-xs font-medium tracking-wider uppercase"
+          >
             Contraseña
           </label>
           <button
@@ -157,7 +175,9 @@ async function handleSubmit() {
     </div>
 
     <template #footer>
-      <p class="mt-12 text-white/15 text-xs text-center">© 2026 Propied. Panel de administración. Acceso restringido.</p>
+      <p class="mt-12 text-white/15 text-xs text-center">
+        © 2026 Propied. Panel de administración. Acceso restringido.
+      </p>
     </template>
   </AuthSplitLayout>
 </template>

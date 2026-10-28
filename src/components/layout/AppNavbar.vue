@@ -23,8 +23,13 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
 
 <template>
   <nav class="sticky top-0 z-40 bg-[#f5f2ee]/90 backdrop-blur-md border-b border-[#1a1714]/8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-      <button class="flex items-center shrink-0 hover:opacity-80 transition-opacity" @click="router.push('/home')">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4"
+    >
+      <button
+        class="flex items-center shrink-0 hover:opacity-80 transition-opacity"
+        @click="router.push('/home')"
+      >
         <img :src="muIsotipo" alt="MU Real Estate" class="h-14 w-auto object-contain" />
       </button>
 
@@ -42,7 +47,9 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
       </form>
 
       <div class="hidden md:flex items-center gap-1">
-        <button class="p-2 rounded-lg text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2] transition-all duration-150">
+        <button
+          class="p-2 rounded-lg text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2] transition-all duration-150"
+        >
           <Heart :size="18" />
         </button>
         <a
@@ -57,7 +64,9 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
         <div class="w-px h-5 bg-[#1a1714]/10 mx-1" />
         <template v-if="auth.isAuthenticated">
           <div class="flex items-center gap-2.5 pl-1">
-            <div class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white">
+            <div
+              class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white"
+            >
               {{ auth.iniciales }}
             </div>
             <span class="text-sm text-[#1a1714] font-medium">{{ auth.nombreCorto }}</span>
@@ -88,8 +97,14 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
       </button>
     </div>
 
-    <div v-if="menuOpen" class="md:hidden border-t border-[#1a1714]/8 bg-[#f5f2ee] px-4 py-4 flex flex-col gap-3">
-      <form class="flex items-center bg-[#ede8e2] rounded-lg px-3.5 py-2 gap-2" @submit.prevent="buscar">
+    <div
+      v-if="menuOpen"
+      class="md:hidden border-t border-[#1a1714]/8 bg-[#f5f2ee] px-4 py-4 flex flex-col gap-3"
+    >
+      <form
+        class="flex items-center bg-[#ede8e2] rounded-lg px-3.5 py-2 gap-2"
+        @submit.prevent="buscar"
+      >
         <Search :size="14" class="text-[#a89f95]" />
         <input
           v-model="query"
@@ -101,16 +116,23 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
       <div class="flex items-center justify-between pt-1">
         <template v-if="auth.isAuthenticated">
           <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white">
+            <div
+              class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white"
+            >
               {{ auth.iniciales }}
             </div>
             <span class="text-sm text-[#1a1714]">{{ auth.nombreCorto }}</span>
           </div>
-          <button class="text-sm text-[#7a7067] flex items-center gap-1.5 hover:text-[#1a1714]" @click="handleLogout">
+          <button
+            class="text-sm text-[#7a7067] flex items-center gap-1.5 hover:text-[#1a1714]"
+            @click="handleLogout"
+          >
             <LogOut :size="14" /> Salir
           </button>
         </template>
-        <button v-else class="text-sm text-[#1a1714] font-medium" @click="router.push('/login')">Iniciar sesión</button>
+        <button v-else class="text-sm text-[#1a1714] font-medium" @click="router.push('/login')">
+          Iniciar sesión
+        </button>
       </div>
     </div>
   </nav>

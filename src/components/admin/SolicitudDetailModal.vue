@@ -28,19 +28,32 @@ const datos = computed(() => [
 
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-    <div class="bg-[#141413] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div
+      class="bg-[#141413] border border-white/10 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+    >
       <div class="flex items-center justify-between p-6 border-b border-white/6">
         <div class="flex items-center gap-3">
-          <div :class="['w-8 h-8 rounded-xl border flex items-center justify-center', cfg.bg, cfg.color]">
+          <div
+            :class="[
+              'w-8 h-8 rounded-xl border flex items-center justify-center',
+              cfg.bg,
+              cfg.color,
+            ]"
+          >
             <CalendarCheck v-if="sol.tipo === 'visita'" :size="14" />
             <PhoneCall v-else :size="14" />
           </div>
           <div>
             <p class="text-white/80 text-sm font-medium">{{ sol.nombre }}</p>
-            <p class="text-white/30 text-xs">{{ sol.tipo === 'visita' ? 'Solicitud de visita' : 'Solicitud de contacto' }}</p>
+            <p class="text-white/30 text-xs">
+              {{ sol.tipo === 'visita' ? 'Solicitud de visita' : 'Solicitud de contacto' }}
+            </p>
           </div>
         </div>
-        <button class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all" @click="emit('close')">
+        <button
+          class="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all"
+          @click="emit('close')"
+        >
           <X :size="16" />
         </button>
       </div>
@@ -66,7 +79,9 @@ const datos = computed(() => [
               :key="e"
               :class="[
                 'inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all',
-                sol.estado === e ? [ESTADOS_SOL[e].bg, ESTADOS_SOL[e].color] : 'border-white/8 text-white/25 hover:border-white/20',
+                sol.estado === e
+                  ? [ESTADOS_SOL[e].bg, ESTADOS_SOL[e].color]
+                  : 'border-white/8 text-white/25 hover:border-white/20',
               ]"
               @click="emit('cambiarEstado', e)"
             >

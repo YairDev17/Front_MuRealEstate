@@ -21,7 +21,8 @@ export interface Postulacion {
 }
 
 // ── Historial de actividad ──
-export type AccionTipo = 'creacion' | 'edicion' | 'estado' | 'precio' | 'imagenes' | 'eliminacion' | 'bienes' | 'ubicacion'
+export type AccionTipo =
+  'creacion' | 'edicion' | 'estado' | 'precio' | 'imagenes' | 'eliminacion' | 'bienes' | 'ubicacion'
 
 export interface Actividad {
   id: number

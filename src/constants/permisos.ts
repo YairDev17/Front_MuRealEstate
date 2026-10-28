@@ -17,7 +17,16 @@ export const PERMISOS_CATALOGO = [
 
 export const PERMISOS_POR_ROL: Record<RolAdmin, string[]> = {
   super_admin: PERMISOS_CATALOGO.map((p) => p.id),
-  admin: ['ver_propiedades', 'editar_propiedades', 'publicar_propiedades', 'ver_solicitudes', 'gestionar_solicitudes', 'asignar_solicitudes', 'ver_usuarios', 'ver_reportes'],
+  admin: [
+    'ver_propiedades',
+    'editar_propiedades',
+    'publicar_propiedades',
+    'ver_solicitudes',
+    'gestionar_solicitudes',
+    'asignar_solicitudes',
+    'ver_usuarios',
+    'ver_reportes',
+  ],
   agente: ['ver_propiedades', 'editar_propiedades', 'ver_solicitudes', 'gestionar_solicitudes'],
   visor: ['ver_propiedades', 'ver_solicitudes', 'ver_reportes'],
 }

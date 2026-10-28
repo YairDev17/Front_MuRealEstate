@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { AlertCircle, Bell, CalendarCheck, Filter, MapPin, MessageSquare, PhoneCall, Plus, Search, User } from 'lucide-vue-next'
+import {
+  AlertCircle,
+  Bell,
+  CalendarCheck,
+  Filter,
+  MapPin,
+  MessageSquare,
+  PhoneCall,
+  Plus,
+  Search,
+  User,
+} from 'lucide-vue-next'
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import AdminLogoutActions from '@/components/admin/AdminLogoutActions.vue'
 import SolicitudDetailModal from '@/components/admin/SolicitudDetailModal.vue'
@@ -21,7 +32,10 @@ const detalleId = ref<number | null>(null)
 const nuevoAviso = ref(false)
 
 onMounted(async () => {
-  ;[solicitudes.value, avisos.value] = await Promise.all([adminSolicitudesService.listar(), adminAvisosService.listar()])
+  ;[solicitudes.value, avisos.value] = await Promise.all([
+    adminSolicitudesService.listar(),
+    adminAvisosService.listar(),
+  ])
 })
 
 const detalle = computed(() => solicitudes.value.find((s) => s.id === detalleId.value) ?? null)
@@ -40,9 +54,19 @@ const nuevas = computed(() => solicitudes.value.filter((s) => s.estado === 'nuev
 const noLeidos = computed(() => avisos.value.filter((a) => !a.leido).length)
 
 const stats = computed(() => [
-  { label: 'Total solicitudes', value: solicitudes.value.length, color: 'text-white/50', icon: MessageSquare },
+  {
+    label: 'Total solicitudes',
+    value: solicitudes.value.length,
+    color: 'text-white/50',
+    icon: MessageSquare,
+  },
   { label: 'Nuevas', value: nuevas.value, color: 'text-amber-400', icon: AlertCircle },
-  { label: 'Asignadas', value: solicitudes.value.filter((s) => s.estado === 'asignada').length, color: 'text-sky-400', icon: User },
+  {
+    label: 'Asignadas',
+    value: solicitudes.value.filter((s) => s.estado === 'asignada').length,
+    color: 'text-sky-400',
+    icon: User,
+  },
   { label: 'Avisos sin leer', value: noLeidos.value, color: 'text-purple-400', icon: Bell },
 ])
 
@@ -69,7 +93,10 @@ async function actualizarSolicitud(id: number, patch: Partial<Solicitud>) {
 }
 
 function handleAsignar(sol: Solicitud, agente: string) {
-  actualizarSolicitud(sol.id, { asignadoA: agente || null, estado: agente ? 'asignada' : sol.estado })
+  actualizarSolicitud(sol.id, {
+    asignadoA: agente || null,
+    estado: agente ? 'asignada' : sol.estado,
+  })
 }
 
 async function handleEnviarAviso(aviso: Omit<Aviso, 'id' | 'leido'>) {
@@ -106,7 +133,9 @@ async function marcarLeido(aviso: Aviso) {
       <div class="flex items-start justify-between mb-6 gap-4 flex-wrap">
         <div>
           <h1 class="text-white text-2xl mb-1" :style="SERIF">Centro de Solicitudes</h1>
-          <p class="text-white/30 text-sm">Gestiona solicitudes de contacto, visitas y avisos al equipo.</p>
+          <p class="text-white/30 text-sm">
+            Gestiona solicitudes de contacto, visitas y avisos al equipo.
+          </p>
         </div>
         <div class="flex items-center gap-2">
           <button
@@ -120,9 +149,15 @@ async function marcarLeido(aviso: Aviso) {
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div v-for="s in stats" :key="s.label" class="bg-white/3 border border-white/6 rounded-xl px-4 py-4">
+        <div
+          v-for="s in stats"
+          :key="s.label"
+          class="bg-white/3 border border-white/6 rounded-xl px-4 py-4"
+        >
           <div :class="['flex items-center gap-2 mb-2', s.color]">
-            <component :is="s.icon" :size="13" /><span class="text-xs opacity-80">{{ s.label }}</span>
+            <component :is="s.icon" :size="13" /><span class="text-xs opacity-80">{{
+              s.label
+            }}</span>
           </div>
           <p class="text-white text-2xl font-medium" :style="SERIF">{{ s.value }}</p>
         </div>
@@ -137,12 +172,17 @@ async function marcarLeido(aviso: Aviso) {
           :key="t.val"
           :class="[
             'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-all duration-150 -mb-px',
-            tab === t.val ? 'border-white/60 text-white/80' : 'border-transparent text-white/30 hover:text-white/50 hover:border-white/20',
+            tab === t.val
+              ? 'border-white/60 text-white/80'
+              : 'border-transparent text-white/30 hover:text-white/50 hover:border-white/20',
           ]"
           @click="tab = t.val"
         >
           <component :is="t.icon" :size="13" /> {{ t.label }}
-          <span v-if="t.badge > 0" class="bg-amber-400 text-black text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none">
+          <span
+            v-if="t.badge > 0"
+            class="bg-amber-400 text-black text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none"
+          >
             {{ t.badge }}
           </span>
         </button>
@@ -150,7 +190,9 @@ async function marcarLeido(aviso: Aviso) {
 
       <template v-if="tab === 'solicitudes'">
         <div class="flex flex-wrap items-center gap-3 mb-5">
-          <div class="flex items-center bg-white/5 border border-white/8 rounded-lg px-3 py-2 gap-2 w-60">
+          <div
+            class="flex items-center bg-white/5 border border-white/8 rounded-lg px-3 py-2 gap-2 w-60"
+          >
             <Search :size="13" class="text-white/20 shrink-0" />
             <input
               v-model="search"
@@ -160,7 +202,12 @@ async function marcarLeido(aviso: Aviso) {
             />
           </div>
           <div class="flex items-center gap-1.5">
-            <button v-for="[val, label] in filtrosTipo" :key="val" :class="filtroCls(filtroTipo === val)" @click="filtroTipo = val">
+            <button
+              v-for="[val, label] in filtrosTipo"
+              :key="val"
+              :class="filtroCls(filtroTipo === val)"
+              @click="filtroTipo = val"
+            >
               {{ label }}
             </button>
           </div>
@@ -205,9 +252,12 @@ async function marcarLeido(aviso: Aviso) {
                         ESTADOS_SOL[sol.estado].color,
                       ]"
                     >
-                      <component :is="ESTADOS_SOL[sol.estado].icon" :size="11" /> {{ ESTADOS_SOL[sol.estado].label }}
+                      <component :is="ESTADOS_SOL[sol.estado].icon" :size="11" />
+                      {{ ESTADOS_SOL[sol.estado].label }}
                     </span>
-                    <span class="text-white/20 text-[10px] capitalize bg-white/4 px-2 py-0.5 rounded-full border border-white/6">
+                    <span
+                      class="text-white/20 text-[10px] capitalize bg-white/4 px-2 py-0.5 rounded-full border border-white/6"
+                    >
                       {{ sol.tipo === 'visita' ? 'Visita' : 'Contacto' }}
                     </span>
                   </div>
@@ -222,7 +272,9 @@ async function marcarLeido(aviso: Aviso) {
                 <p class="text-white/25 text-xs mb-1">{{ sol.fecha }}</p>
                 <p class="text-white/15 text-[10px]">{{ sol.hora }}</p>
                 <div v-if="sol.asignadoA" class="mt-2 flex items-center gap-1.5 justify-end">
-                  <div class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[8px] text-white/40">
+                  <div
+                    class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[8px] text-white/40"
+                  >
                     {{ iniciales(sol.asignadoA) }}
                   </div>
                   <span class="text-white/25 text-[10px]">{{ sol.asignadoA }}</span>
@@ -234,7 +286,10 @@ async function marcarLeido(aviso: Aviso) {
               <p class="text-white/25 text-xs line-clamp-1">{{ sol.notas }}</p>
             </div>
           </div>
-          <div v-if="!filtradas.length" class="border border-dashed border-white/8 rounded-xl py-16 flex flex-col items-center gap-2">
+          <div
+            v-if="!filtradas.length"
+            class="border border-dashed border-white/8 rounded-xl py-16 flex flex-col items-center gap-2"
+          >
             <Filter :size="20" class="text-white/15" />
             <p class="text-white/20 text-sm">Sin solicitudes que coincidan</p>
           </div>
@@ -247,7 +302,9 @@ async function marcarLeido(aviso: Aviso) {
           :key="aviso.id"
           :class="[
             'border rounded-xl p-4 transition-all cursor-pointer group',
-            aviso.leido ? 'bg-white/2 border-white/5 hover:bg-white/4' : 'bg-white/4 border-white/10 hover:bg-white/6',
+            aviso.leido
+              ? 'bg-white/2 border-white/5 hover:bg-white/4'
+              : 'bg-white/4 border-white/10 hover:bg-white/6',
           ]"
           @click="marcarLeido(aviso)"
         >
@@ -264,8 +321,18 @@ async function marcarLeido(aviso: Aviso) {
             <div class="min-w-0 flex-1">
               <div class="flex items-start justify-between gap-2 mb-1">
                 <div class="flex items-center gap-2 flex-wrap">
-                  <p :class="['text-sm font-medium', aviso.leido ? 'text-white/50' : 'text-white/80']">{{ aviso.titulo }}</p>
-                  <span v-if="!aviso.leido" class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                  <p
+                    :class="[
+                      'text-sm font-medium',
+                      aviso.leido ? 'text-white/50' : 'text-white/80',
+                    ]"
+                  >
+                    {{ aviso.titulo }}
+                  </p>
+                  <span
+                    v-if="!aviso.leido"
+                    class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"
+                  />
                   <span
                     :class="[
                       'inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border',
@@ -273,12 +340,20 @@ async function marcarLeido(aviso: Aviso) {
                       AVISOS_TIPO[aviso.tipo].color,
                     ]"
                   >
-                    <component :is="AVISOS_TIPO[aviso.tipo].icon" :size="12" /> {{ AVISOS_TIPO[aviso.tipo].label }}
+                    <component :is="AVISOS_TIPO[aviso.tipo].icon" :size="12" />
+                    {{ AVISOS_TIPO[aviso.tipo].label }}
                   </span>
                 </div>
                 <p class="text-white/20 text-[10px] shrink-0">{{ aviso.fecha }}</p>
               </div>
-              <p :class="['text-xs leading-relaxed mb-2', aviso.leido ? 'text-white/25' : 'text-white/40']">{{ aviso.cuerpo }}</p>
+              <p
+                :class="[
+                  'text-xs leading-relaxed mb-2',
+                  aviso.leido ? 'text-white/25' : 'text-white/40',
+                ]"
+              >
+                {{ aviso.cuerpo }}
+              </p>
               <div class="flex items-center gap-3">
                 <span class="text-white/20 text-[10px]">De: {{ aviso.autor }}</span>
                 <span class="text-white/15 text-[10px]">Para: {{ aviso.destinatario }}</span>

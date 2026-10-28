@@ -10,7 +10,12 @@ const steps = [
   { label: 'Recibido', desc: 'Tu solicitud llegó a nuestro equipo.', done: true, active: false },
   { label: 'En revisión', desc: 'Verificamos los datos y fotografías.', done: true, active: true },
   { label: 'Contacto', desc: 'Te llamamos para confirmar detalles.', done: false, active: false },
-  { label: 'Publicado', desc: 'La propiedad aparece en el portafolio.', done: false, active: false },
+  {
+    label: 'Publicado',
+    desc: 'La propiedad aparece en el portafolio.',
+    done: false,
+    active: false,
+  },
 ]
 </script>
 
@@ -23,13 +28,19 @@ const steps = [
     </nav>
 
     <div class="max-w-screen-xl mx-auto px-5 py-16 flex flex-col items-center">
-      <div class="inline-flex items-center gap-2 bg-[#b8935a]/12 border border-[#b8935a]/30 rounded-full px-4 py-1.5 mb-8">
+      <div
+        class="inline-flex items-center gap-2 bg-[#b8935a]/12 border border-[#b8935a]/30 rounded-full px-4 py-1.5 mb-8"
+      >
         <span class="w-1.5 h-1.5 rounded-full bg-[#b8935a] animate-pulse" />
         <span class="text-[#b8935a] text-xs font-medium tracking-wider uppercase">En revisión</span>
       </div>
 
-      <div class="bg-white border border-[#1a1714]/8 rounded-xl max-w-lg w-full p-8 mb-8 text-center shadow-sm">
-        <div class="w-16 h-16 rounded-full bg-[#1c2b47] flex items-center justify-center mx-auto mb-6">
+      <div
+        class="bg-white border border-[#1a1714]/8 rounded-xl max-w-lg w-full p-8 mb-8 text-center shadow-sm"
+      >
+        <div
+          class="w-16 h-16 rounded-full bg-[#1c2b47] flex items-center justify-center mx-auto mb-6"
+        >
           <CheckCircle2 :size="26" class="text-[#b8935a]" />
         </div>
         <h1 class="text-[#1a1714] text-3xl mb-2" :style="SERIF">¡Tu propiedad está en revisión!</h1>
@@ -37,8 +48,8 @@ const steps = [
           {{ nombre || [colonia, ciudad].filter(Boolean).join(', ') }}
         </p>
         <p class="text-[#7a7067] text-sm leading-relaxed mb-6">
-          Recibimos toda la información. Nuestro equipo la revisará y se pondrá en contacto contigo para confirmar los
-          detalles antes de publicarla.
+          Recibimos toda la información. Nuestro equipo la revisará y se pondrá en contacto contigo
+          para confirmar los detalles antes de publicarla.
         </p>
         <div class="bg-[#f5f2ee] rounded-lg p-4 flex items-center justify-center gap-2 mb-2">
           <span class="text-[#a89f95] text-xs">Tiempo estimado de respuesta:</span>
@@ -47,7 +58,9 @@ const steps = [
       </div>
 
       <div class="bg-white border border-[#1a1714]/8 rounded-xl max-w-lg w-full px-8 py-6 mb-8">
-        <p class="text-[#a89f95] text-[10px] tracking-widest uppercase font-medium mb-6">¿Qué sigue?</p>
+        <p class="text-[#a89f95] text-[10px] tracking-widest uppercase font-medium mb-6">
+          ¿Qué sigue?
+        </p>
         <div class="flex flex-col gap-0">
           <div v-for="(s, i) in steps" :key="s.label" class="flex gap-4">
             <div class="flex flex-col items-center">

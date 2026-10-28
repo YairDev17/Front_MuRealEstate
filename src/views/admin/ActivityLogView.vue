@@ -21,14 +21,54 @@ import type { AccionTipo, Actividad } from '@/types/admin'
 import { SERIF } from '@/config'
 
 const ACCION_CONFIG = {
-  creacion: { icon: Plus, label: 'Creación', color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/20' },
-  edicion: { icon: PencilLine, label: 'Edición', color: 'text-sky-400', bg: 'bg-sky-400/10 border-sky-400/20' },
-  estado: { icon: ArrowRightLeft, label: 'Estado', color: 'text-violet-400', bg: 'bg-violet-400/10 border-violet-400/20' },
-  precio: { icon: DollarSign, label: 'Precio', color: 'text-amber-400', bg: 'bg-amber-400/10 border-amber-400/20' },
-  imagenes: { icon: Image, label: 'Imágenes', color: 'text-pink-400', bg: 'bg-pink-400/10 border-pink-400/20' },
-  eliminacion: { icon: Trash2, label: 'Eliminación', color: 'text-red-400', bg: 'bg-red-400/10 border-red-400/20' },
-  bienes: { icon: Package, label: 'Bienes', color: 'text-orange-400', bg: 'bg-orange-400/10 border-orange-400/20' },
-  ubicacion: { icon: MapPin, label: 'Ubicación', color: 'text-teal-400', bg: 'bg-teal-400/10 border-teal-400/20' },
+  creacion: {
+    icon: Plus,
+    label: 'Creación',
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-400/10 border-emerald-400/20',
+  },
+  edicion: {
+    icon: PencilLine,
+    label: 'Edición',
+    color: 'text-sky-400',
+    bg: 'bg-sky-400/10 border-sky-400/20',
+  },
+  estado: {
+    icon: ArrowRightLeft,
+    label: 'Estado',
+    color: 'text-violet-400',
+    bg: 'bg-violet-400/10 border-violet-400/20',
+  },
+  precio: {
+    icon: DollarSign,
+    label: 'Precio',
+    color: 'text-amber-400',
+    bg: 'bg-amber-400/10 border-amber-400/20',
+  },
+  imagenes: {
+    icon: Image,
+    label: 'Imágenes',
+    color: 'text-pink-400',
+    bg: 'bg-pink-400/10 border-pink-400/20',
+  },
+  eliminacion: {
+    icon: Trash2,
+    label: 'Eliminación',
+    color: 'text-red-400',
+    bg: 'bg-red-400/10 border-red-400/20',
+  },
+  bienes: {
+    icon: Package,
+    label: 'Bienes',
+    color: 'text-orange-400',
+    bg: 'bg-orange-400/10 border-orange-400/20',
+  },
+  ubicacion: {
+    icon: MapPin,
+    label: 'Ubicación',
+    color: 'text-teal-400',
+    bg: 'bg-teal-400/10 border-teal-400/20',
+  },
 } satisfies Record<AccionTipo, unknown>
 
 const ACCIONES: { val: AccionTipo | 'todas'; label: string }[] = [
@@ -69,7 +109,9 @@ const grouped = computed(() => {
   return groups
 })
 
-const hayFiltros = computed(() => agente.value !== 'Todos' || accion.value !== 'todas' || !!search.value)
+const hayFiltros = computed(
+  () => agente.value !== 'Todos' || accion.value !== 'todas' || !!search.value,
+)
 
 function limpiar() {
   agente.value = 'Todos'
@@ -109,7 +151,9 @@ const optionCls = (active: boolean) => [
         <div class="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <h1 class="text-white text-2xl mb-1" :style="SERIF">Historial de modificaciones</h1>
-            <p class="text-white/30 text-sm">Registro completo de cambios realizados en el portafolio de propiedades.</p>
+            <p class="text-white/30 text-sm">
+              Registro completo de cambios realizados en el portafolio de propiedades.
+            </p>
           </div>
           <div class="bg-white/3 border border-white/6 rounded-xl px-5 py-3 text-center">
             <p class="text-white text-2xl font-medium" :style="SERIF">{{ actividades.length }}</p>
@@ -133,17 +177,23 @@ const optionCls = (active: boolean) => [
         </div>
 
         <div class="relative shrink-0">
-          <button :class="btnCls" @click="(showAgenteMenu = !showAgenteMenu), (showAccionMenu = false)">
+          <button
+            :class="btnCls"
+            @click="((showAgenteMenu = !showAgenteMenu), (showAccionMenu = false))"
+          >
             <Eye :size="12" class="text-white/30" />
             {{ agente }}
-            <ChevronDown :size="11" :class="['text-white/20 transition-transform', showAgenteMenu ? 'rotate-180' : '']" />
+            <ChevronDown
+              :size="11"
+              :class="['text-white/20 transition-transform', showAgenteMenu ? 'rotate-180' : '']"
+            />
           </button>
           <div v-if="showAgenteMenu" :class="dropdownCls">
             <button
               v-for="a in agentes"
               :key="a"
               :class="optionCls(agente === a)"
-              @click="(agente = a), (showAgenteMenu = false)"
+              @click="((agente = a), (showAgenteMenu = false))"
             >
               {{ a }}
             </button>
@@ -151,24 +201,34 @@ const optionCls = (active: boolean) => [
         </div>
 
         <div class="relative shrink-0">
-          <button :class="btnCls" @click="(showAccionMenu = !showAccionMenu), (showAgenteMenu = false)">
+          <button
+            :class="btnCls"
+            @click="((showAccionMenu = !showAccionMenu), (showAgenteMenu = false))"
+          >
             <PencilLine :size="12" class="text-white/30" />
             {{ ACCIONES.find((a) => a.val === accion)?.label }}
-            <ChevronDown :size="11" :class="['text-white/20 transition-transform', showAccionMenu ? 'rotate-180' : '']" />
+            <ChevronDown
+              :size="11"
+              :class="['text-white/20 transition-transform', showAccionMenu ? 'rotate-180' : '']"
+            />
           </button>
           <div v-if="showAccionMenu" :class="dropdownCls">
             <button
               v-for="a in ACCIONES"
               :key="a.val"
               :class="optionCls(accion === a.val)"
-              @click="(accion = a.val), (showAccionMenu = false)"
+              @click="((accion = a.val), (showAccionMenu = false))"
             >
               {{ a.label }}
             </button>
           </div>
         </div>
 
-        <button v-if="hayFiltros" class="text-xs text-white/25 hover:text-white/50 transition-colors px-2" @click="limpiar">
+        <button
+          v-if="hayFiltros"
+          class="text-xs text-white/25 hover:text-white/50 transition-colors px-2"
+          @click="limpiar"
+        >
           Limpiar filtros
         </button>
       </div>
@@ -184,9 +244,13 @@ const optionCls = (active: boolean) => [
       <div v-else class="flex flex-col gap-8">
         <div v-for="(items, fecha) in grouped" :key="fecha">
           <div class="flex items-center gap-3 mb-4">
-            <p class="text-white/25 text-xs font-medium tracking-widest uppercase shrink-0">{{ fecha }}</p>
+            <p class="text-white/25 text-xs font-medium tracking-widest uppercase shrink-0">
+              {{ fecha }}
+            </p>
             <div class="flex-1 h-px bg-white/6" />
-            <span class="text-white/15 text-[10px]">{{ items.length }} {{ items.length === 1 ? 'cambio' : 'cambios' }}</span>
+            <span class="text-white/15 text-[10px]"
+              >{{ items.length }} {{ items.length === 1 ? 'cambio' : 'cambios' }}</span
+            >
           </div>
 
           <div class="relative">
@@ -222,26 +286,39 @@ const optionCls = (active: boolean) => [
                         <component :is="ACCION_CONFIG[a.accion].icon" :size="12" />
                         {{ ACCION_CONFIG[a.accion].label }}
                       </span>
-                      <h3 class="text-white/80 text-sm leading-tight" :style="SERIF">{{ a.propiedad }}</h3>
-                      <span class="text-white/25 text-xs flex items-center gap-0.5"><MapPin :size="9" />{{ a.colonia }}</span>
+                      <h3 class="text-white/80 text-sm leading-tight" :style="SERIF">
+                        {{ a.propiedad }}
+                      </h3>
+                      <span class="text-white/25 text-xs flex items-center gap-0.5"
+                        ><MapPin :size="9" />{{ a.colonia }}</span
+                      >
                     </div>
                     <span class="text-white/20 text-xs shrink-0">{{ a.hora }} h</span>
                   </div>
 
                   <p class="text-white/40 text-xs leading-relaxed mb-3">{{ a.detalle }}</p>
 
-                  <div v-if="a.estadoAnterior && a.estadoNuevo" class="flex items-center gap-2 mb-3">
-                    <span class="text-white/20 text-[10px] bg-white/4 border border-white/8 px-2 py-1 rounded-md">
+                  <div
+                    v-if="a.estadoAnterior && a.estadoNuevo"
+                    class="flex items-center gap-2 mb-3"
+                  >
+                    <span
+                      class="text-white/20 text-[10px] bg-white/4 border border-white/8 px-2 py-1 rounded-md"
+                    >
                       {{ a.estadoAnterior }}
                     </span>
                     <ArrowRightLeft :size="10" class="text-white/20 shrink-0" />
-                    <span class="text-white/60 text-[10px] bg-white/6 border border-white/12 px-2 py-1 rounded-md">
+                    <span
+                      class="text-white/60 text-[10px] bg-white/6 border border-white/12 px-2 py-1 rounded-md"
+                    >
                       {{ a.estadoNuevo }}
                     </span>
                   </div>
 
                   <div class="flex items-center gap-2">
-                    <div class="w-5 h-5 rounded-full bg-white/8 flex items-center justify-center text-[9px] text-white/40 font-medium shrink-0">
+                    <div
+                      class="w-5 h-5 rounded-full bg-white/8 flex items-center justify-center text-[9px] text-white/40 font-medium shrink-0"
+                    >
                       {{ initials(a.agente) }}
                     </div>
                     <span class="text-white/25 text-[11px]">{{ a.agente }}</span>

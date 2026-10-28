@@ -148,18 +148,28 @@ function digitClass(d: string) {
   >
     <template #logo>
       <div class="flex items-center">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain brightness-0 invert" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-24 w-auto object-contain brightness-0 invert"
+        />
       </div>
     </template>
     <template #aside>
-      <p class="text-white text-3xl xl:text-4xl leading-snug mb-4" :style="SERIF">Un solo paso más para comenzar.</p>
+      <p class="text-white text-3xl xl:text-4xl leading-snug mb-4" :style="SERIF">
+        Un solo paso más para comenzar.
+      </p>
       <p class="text-white/60 text-sm leading-relaxed">
         Verifica tu correo y accede a las mejores propiedades del mercado.
       </p>
     </template>
     <template #mobile-logo>
       <div class="flex items-center mb-10 lg:hidden">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain brightness-0" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-24 w-auto object-contain brightness-0"
+        />
       </div>
     </template>
 
@@ -169,7 +179,9 @@ function digitClass(d: string) {
         <div class="w-20 h-20 rounded-full bg-[#1c2b47]/10 flex items-center justify-center">
           <CheckCircle2 :size="38" class="text-[#1c2b47]" :stroke-width="1.4" />
         </div>
-        <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#b8935a] flex items-center justify-center">
+        <div
+          class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#b8935a] flex items-center justify-center"
+        >
           <span class="text-white text-xs font-bold">✓</span>
         </div>
       </div>
@@ -177,7 +189,8 @@ function digitClass(d: string) {
         <h2 class="text-[#1a1714] text-3xl mb-2" :style="SERIF">¡Correo verificado!</h2>
         <p class="text-[#7a7067] text-sm leading-relaxed">
           <template v-if="nombre">
-            Bienvenido, <span class="font-medium text-[#1a1714]">{{ nombre }}</span>. Tu cuenta está lista.
+            Bienvenido, <span class="font-medium text-[#1a1714]">{{ nombre }}</span
+            >. Tu cuenta está lista.
           </template>
           <template v-else>Tu cuenta ha sido verificada exitosamente.</template>
         </p>
@@ -187,7 +200,9 @@ function digitClass(d: string) {
         v-if="interesadoEnPublicar"
         class="w-full rounded-xl bg-[#1c2b47]/5 border border-[#1c2b47]/10 px-5 py-4 text-left"
       >
-        <p class="text-xs uppercase tracking-widest text-[#b8935a] font-medium mb-1">Próximo paso</p>
+        <p class="text-xs uppercase tracking-widest text-[#b8935a] font-medium mb-1">
+          Próximo paso
+        </p>
         <p class="text-sm text-[#1a1714]">
           Un asesor de MU Real Estate te contactará para ayudarte a publicar tu propiedad.
         </p>
@@ -219,7 +234,8 @@ function digitClass(d: string) {
         <h1 class="text-[#1a1714] text-3xl xl:text-4xl mb-2" :style="SERIF">Verifica tu correo</h1>
         <p class="text-[#7a7067] text-sm leading-relaxed">
           Enviamos un código de 6 dígitos a
-          <span class="font-medium text-[#1a1714]">{{ maskEmail(correo) }}</span>. Revisa tu bandeja de entrada.
+          <span class="font-medium text-[#1a1714]">{{ maskEmail(correo) }}</span
+          >. Revisa tu bandeja de entrada.
         </p>
       </div>
 
@@ -227,7 +243,11 @@ function digitClass(d: string) {
         <input
           v-for="(d, i) in digits"
           :key="i"
-          :ref="(el) => { if (el) inputRefs[i] = el as HTMLInputElement }"
+          :ref="
+            (el) => {
+              if (el) inputRefs[i] = el as HTMLInputElement
+            }
+          "
           type="text"
           inputmode="numeric"
           :autocomplete="i === 0 ? 'one-time-code' : 'off'"
@@ -255,7 +275,9 @@ function digitClass(d: string) {
 
       <div class="mt-6 flex items-center justify-center gap-2 text-sm">
         <span class="text-[#7a7067]">¿No recibiste el código?</span>
-        <span v-if="countdown > 0" class="text-[#a89f95] text-xs tabular-nums">Reenviar en {{ countdown }}s</span>
+        <span v-if="countdown > 0" class="text-[#a89f95] text-xs tabular-nums"
+          >Reenviar en {{ countdown }}s</span
+        >
         <button
           v-else
           type="button"
@@ -276,7 +298,9 @@ function digitClass(d: string) {
     </template>
 
     <template #footer>
-      <p class="mt-10 mb-4 text-[#a89f95] text-xs text-center">© 2026 MU Real Estate. Todos los derechos reservados.</p>
+      <p class="mt-10 mb-4 text-[#a89f95] text-xs text-center">
+        © 2026 MU Real Estate. Todos los derechos reservados.
+      </p>
     </template>
   </AuthSplitLayout>
 </template>

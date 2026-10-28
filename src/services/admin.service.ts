@@ -63,10 +63,15 @@ const propiedadesBase = resource<PropiedadAdmin>('/admin/propiedades', propiedad
 
 export const adminPropiedadesService = {
   ...propiedadesBase,
-  cambiarEstado: (id: number, estado: EstadoPropiedad) => propiedadesBase.actualizar(id, { estado }),
+  cambiarEstado: (id: number, estado: EstadoPropiedad) =>
+    propiedadesBase.actualizar(id, { estado }),
   /** Alta desde el formulario "Nueva propiedad" (multipart con fotos). */
-  crearDesdeFormulario(data: PropiedadFormData, extra: { agente: string; estado: EstadoPropiedad }): Promise<PropiedadAdmin> {
-    if (!USE_MOCKS) return http('/admin/propiedades', { method: 'POST', body: toFormData(data, extra) })
+  crearDesdeFormulario(
+    data: PropiedadFormData,
+    extra: { agente: string; estado: EstadoPropiedad },
+  ): Promise<PropiedadAdmin> {
+    if (!USE_MOCKS)
+      return http('/admin/propiedades', { method: 'POST', body: toFormData(data, extra) })
     const imagenes = data.imagenes.map((f) => URL.createObjectURL(f))
     return propiedadesBase.crear({
       titulo: data.nombre,
@@ -81,7 +86,11 @@ export const adminPropiedadesService = {
       imagenes,
       estado: extra.estado,
       agente: extra.agente,
-      fechaIngreso: new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }),
+      fechaIngreso: new Date().toLocaleDateString('es-MX', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
       descripcion: data.descripcion,
       caracteristicas: data.caracteristicas,
       estacionamientos: Number(data.estacionamientos || 0),

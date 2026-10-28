@@ -32,7 +32,11 @@ async function handleSubmit() {
     await authService.registro({ ...form })
     router.push({
       path: '/verificacion',
-      state: { correo: form.correo, nombre: form.nombre, interesadoEnPublicar: form.interesadoEnPublicar },
+      state: {
+        correo: form.correo,
+        nombre: form.nombre,
+        interesadoEnPublicar: form.interesadoEnPublicar,
+      },
     })
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'No se pudo crear la cuenta.'
@@ -48,7 +52,11 @@ async function handleSubmit() {
   >
     <template #logo>
       <div class="flex items-center">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain brightness-0 invert" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-24 w-auto object-contain brightness-0 invert"
+        />
       </div>
     </template>
     <template #aside>
@@ -61,7 +69,11 @@ async function handleSubmit() {
     </template>
     <template #mobile-logo>
       <div class="flex items-center mb-10 lg:hidden">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain brightness-0" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-24 w-auto object-contain brightness-0"
+        />
       </div>
     </template>
 
@@ -82,17 +94,38 @@ async function handleSubmit() {
       <div class="grid grid-cols-2 gap-4">
         <div class="flex flex-col gap-1.5">
           <label for="nombre" :class="labelCls">Nombre</label>
-          <input id="nombre" v-model="form.nombre" type="text" placeholder="Juan" required :class="inputCls" />
+          <input
+            id="nombre"
+            v-model="form.nombre"
+            type="text"
+            placeholder="Juan"
+            required
+            :class="inputCls"
+          />
         </div>
         <div class="flex flex-col gap-1.5">
           <label for="apellido" :class="labelCls">Apellido</label>
-          <input id="apellido" v-model="form.apellido" type="text" placeholder="García" required :class="inputCls" />
+          <input
+            id="apellido"
+            v-model="form.apellido"
+            type="text"
+            placeholder="García"
+            required
+            :class="inputCls"
+          />
         </div>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <label for="correo" :class="labelCls">Correo electrónico</label>
-        <input id="correo" v-model="form.correo" type="email" placeholder="tu@correo.com" required :class="inputCls" />
+        <input
+          id="correo"
+          v-model="form.correo"
+          type="email"
+          placeholder="tu@correo.com"
+          required
+          :class="inputCls"
+        />
       </div>
 
       <div class="flex flex-col gap-1.5">
@@ -121,7 +154,11 @@ async function handleSubmit() {
           @click="form.interesadoEnPublicar = !form.interesadoEnPublicar"
         >
           <span>
-            {{ form.interesadoEnPublicar ? 'Sí, estoy interesado en publicar' : 'No, solo quiero explorar propiedades' }}
+            {{
+              form.interesadoEnPublicar
+                ? 'Sí, estoy interesado en publicar'
+                : 'No, solo quiero explorar propiedades'
+            }}
           </span>
           <span
             :class="[
@@ -159,7 +196,9 @@ async function handleSubmit() {
     </form>
 
     <template #footer>
-      <p class="mt-10 mb-4 text-[#a89f95] text-xs text-center">© 2026 MU Real Estate. Todos los derechos reservados.</p>
+      <p class="mt-10 mb-4 text-[#a89f95] text-xs text-center">
+        © 2026 MU Real Estate. Todos los derechos reservados.
+      </p>
     </template>
   </AuthSplitLayout>
 </template>

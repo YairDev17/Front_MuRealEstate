@@ -27,7 +27,9 @@ async function cargar(busqueda?: BusquedaHome) {
       q: busqueda?.q,
       tipoInmueble: busqueda?.tipoInmueble ?? undefined,
       servicio: busqueda?.servicio,
-      tipo: busqueda ? tipoPorServicio[busqueda.servicio as keyof typeof tipoPorServicio] : undefined,
+      tipo: busqueda
+        ? tipoPorServicio[busqueda.servicio as keyof typeof tipoPorServicio]
+        : undefined,
     })
   } finally {
     loading.value = false

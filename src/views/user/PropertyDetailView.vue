@@ -87,7 +87,10 @@ const stats = computed(() => {
 
     <div v-else-if="!propiedad" class="flex flex-col items-center justify-center h-[60vh] gap-4">
       <p class="text-[#7a7067] text-lg" :style="SERIF">Propiedad no encontrada.</p>
-      <button class="text-sm text-[#1a1714] underline underline-offset-2" @click="router.push('/home')">
+      <button
+        class="text-sm text-[#1a1714] underline underline-offset-2"
+        @click="router.push('/home')"
+      >
         Volver al inicio
       </button>
     </div>
@@ -109,13 +112,19 @@ const stats = computed(() => {
               v-for="(src, i) in imgs"
               :key="i"
               class="absolute inset-0 transition-opacity duration-1000"
-              :style="{ opacity: i === imgIndex ? 1 : 0, pointerEvents: i === imgIndex ? 'auto' : 'none' }"
+              :style="{
+                opacity: i === imgIndex ? 1 : 0,
+                pointerEvents: i === imgIndex ? 'auto' : 'none',
+              }"
             >
               <img
                 :key="i === imgIndex ? `active-${imgIndex}` : `idle-${i}`"
                 :src="src"
                 :alt="`${propiedad.titulo} - foto ${i + 1}`"
-                :class="['w-full h-full object-cover', i === imgIndex ? `ken-burns kb-${i % 4}` : '']"
+                :class="[
+                  'w-full h-full object-cover',
+                  i === imgIndex ? `ken-burns kb-${i % 4}` : '',
+                ]"
               />
             </div>
 
@@ -125,7 +134,9 @@ const stats = computed(() => {
             >
               <Heart
                 :size="18"
-                :class="favoritos.esFavorito(propiedad.id) ? 'fill-red-400 text-red-400' : 'text-white'"
+                :class="
+                  favoritos.esFavorito(propiedad.id) ? 'fill-red-400 text-red-400' : 'text-white'
+                "
               />
             </button>
 
@@ -155,11 +166,15 @@ const stats = computed(() => {
             <div
               class="absolute bottom-0 inset-x-0 z-10 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-12 pb-4 px-5"
             >
-              <p class="text-white/70 text-xs flex items-center gap-1 mb-1"><MapPin :size="11" /> {{ propiedad.ubicacion }}</p>
+              <p class="text-white/70 text-xs flex items-center gap-1 mb-1">
+                <MapPin :size="11" /> {{ propiedad.ubicacion }}
+              </p>
               <h1 class="text-white text-xl leading-snug" :style="SERIF">{{ propiedad.titulo }}</h1>
             </div>
 
-            <div class="absolute bottom-4 right-4 z-20 bg-black/40 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full">
+            <div
+              class="absolute bottom-4 right-4 z-20 bg-black/40 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full"
+            >
               {{ imgIndex + 1 }} / {{ imgs.length }}
             </div>
           </div>
@@ -171,7 +186,9 @@ const stats = computed(() => {
               :key="i"
               :class="[
                 'flex-1 aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all duration-150',
-                i === imgIndex ? 'border-[#1c2b47]' : 'border-transparent opacity-60 hover:opacity-80',
+                i === imgIndex
+                  ? 'border-[#1c2b47]'
+                  : 'border-transparent opacity-60 hover:opacity-80',
               ]"
               @click="imgIndex = i"
             >
@@ -181,8 +198,12 @@ const stats = computed(() => {
 
           <!-- Header info -->
           <div class="mb-6">
-            <p class="text-[#a89f95] text-sm flex items-center gap-1.5 mb-2"><MapPin :size="13" /> {{ propiedad.ubicacion }}</p>
-            <h1 class="text-[#1a1714] text-3xl lg:text-4xl leading-tight mb-4" :style="SERIF">{{ propiedad.titulo }}</h1>
+            <p class="text-[#a89f95] text-sm flex items-center gap-1.5 mb-2">
+              <MapPin :size="13" /> {{ propiedad.ubicacion }}
+            </p>
+            <h1 class="text-[#1a1714] text-3xl lg:text-4xl leading-tight mb-4" :style="SERIF">
+              {{ propiedad.titulo }}
+            </h1>
             <div class="flex flex-wrap gap-4">
               <div
                 v-for="s in stats"
@@ -205,7 +226,11 @@ const stats = computed(() => {
           <div>
             <h2 class="text-[#1a1714] text-xl mb-4" :style="SERIF">Características</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div v-for="c in propiedad.caracteristicas" :key="c" class="flex items-center gap-2.5 text-sm text-[#1a1714]">
+              <div
+                v-for="c in propiedad.caracteristicas"
+                :key="c"
+                class="flex items-center gap-2.5 text-sm text-[#1a1714]"
+              >
                 <CheckCircle2 :size="14" class="text-[#b8935a] shrink-0" />
                 {{ c }}
               </div>
@@ -244,9 +269,19 @@ const stats = computed(() => {
                 rel="noopener noreferrer"
                 class="w-full bg-[#1c2b47] text-[#f5f2ee] rounded-xl py-3.5 text-sm font-medium flex items-center justify-center gap-2 hover:bg-[#243559] transition-all duration-200 active:scale-[0.99]"
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.128.558 4.122 1.533 5.852L.057 23.57a.5.5 0 0 0 .613.614l5.765-1.476A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.87 9.87 0 0 1-5.046-1.383l-.361-.215-3.742.958.976-3.636-.236-.374A9.836 9.836 0 0 1 2.118 12C2.118 6.52 6.52 2.118 12 2.118S21.882 6.52 21.882 12 17.48 21.882 12 21.882z" />
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"
+                  />
+                  <path
+                    d="M12 0C5.373 0 0 5.373 0 12c0 2.128.558 4.122 1.533 5.852L.057 23.57a.5.5 0 0 0 .613.614l5.765-1.476A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.87 9.87 0 0 1-5.046-1.383l-.361-.215-3.742.958.976-3.636-.236-.374A9.836 9.836 0 0 1 2.118 12C2.118 6.52 6.52 2.118 12 2.118S21.882 6.52 21.882 12 17.48 21.882 12 21.882z"
+                  />
                 </svg>
                 Chatea con nosotros
               </a>
@@ -292,19 +327,35 @@ const stats = computed(() => {
   animation: kbd3 5s ease-out forwards;
 }
 @keyframes kbd0 {
-  0% { transform: scale(1) translate(0%, 0%); }
-  100% { transform: scale(1.08) translate(-1.5%, -1%); }
+  0% {
+    transform: scale(1) translate(0%, 0%);
+  }
+  100% {
+    transform: scale(1.08) translate(-1.5%, -1%);
+  }
 }
 @keyframes kbd1 {
-  0% { transform: scale(1.06) translate(-2%, 0%); }
-  100% { transform: scale(1) translate(1%, 1%); }
+  0% {
+    transform: scale(1.06) translate(-2%, 0%);
+  }
+  100% {
+    transform: scale(1) translate(1%, 1%);
+  }
 }
 @keyframes kbd2 {
-  0% { transform: scale(1) translate(1%, 1%); }
-  100% { transform: scale(1.07) translate(-1%, -1.5%); }
+  0% {
+    transform: scale(1) translate(1%, 1%);
+  }
+  100% {
+    transform: scale(1.07) translate(-1%, -1.5%);
+  }
 }
 @keyframes kbd3 {
-  0% { transform: scale(1.05) translate(0%, -1%); }
-  100% { transform: scale(1) translate(1.5%, 0.5%); }
+  0% {
+    transform: scale(1.05) translate(0%, -1%);
+  }
+  100% {
+    transform: scale(1) translate(1.5%, 0.5%);
+  }
 }
 </style>

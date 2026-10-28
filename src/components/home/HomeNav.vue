@@ -36,7 +36,9 @@ const navLinks = [
       scrolled ? 'bg-[#f5f2ee]/95 backdrop-blur-md shadow-sm' : 'bg-[#f5f2ee]',
     ]"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4"
+    >
       <button
         class="flex items-center shrink-0 hover:opacity-80 transition-opacity"
         @click="scrollTop"
@@ -64,7 +66,9 @@ const navLinks = [
         </button>
         <template v-if="auth.isAuthenticated">
           <div class="flex items-center gap-2.5 pl-1">
-            <div class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white">
+            <div
+              class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white"
+            >
               {{ auth.iniciales }}
             </div>
             <span class="text-sm text-[#1a1714] font-medium">{{ auth.nombreCorto }}</span>
@@ -86,13 +90,19 @@ const navLinks = [
         </button>
       </div>
 
-      <button class="md:hidden p-2 rounded-lg text-[#7a7067] hover:bg-[#ede8e2]" @click="mobileOpen = !mobileOpen">
+      <button
+        class="md:hidden p-2 rounded-lg text-[#7a7067] hover:bg-[#ede8e2]"
+        @click="mobileOpen = !mobileOpen"
+      >
         <X v-if="mobileOpen" :size="20" />
         <Menu v-else :size="20" />
       </button>
     </div>
 
-    <div v-if="mobileOpen" class="md:hidden bg-[#f5f2ee] border-t border-[#1a1714]/8 px-4 py-4 flex flex-col gap-2">
+    <div
+      v-if="mobileOpen"
+      class="md:hidden bg-[#f5f2ee] border-t border-[#1a1714]/8 px-4 py-4 flex flex-col gap-2"
+    >
       <button
         v-for="{ label, id } in navLinks"
         :key="label"

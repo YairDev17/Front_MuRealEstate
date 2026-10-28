@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CalendarDays, CheckCircle2, Clock, Edit3, Eye, Home, Mail, MapPin, MoreHorizontal, Phone, Trash2, User, XCircle } from 'lucide-vue-next'
+import {
+  CalendarDays,
+  CheckCircle2,
+  Clock,
+  Edit3,
+  Eye,
+  Home,
+  Mail,
+  MapPin,
+  MoreHorizontal,
+  Phone,
+  Trash2,
+  User,
+  XCircle,
+} from 'lucide-vue-next'
 import type { EstadoVisita, Visita } from '@/types/admin'
 import { ESTADO_VISITA, formatDateLabel } from './agenda'
 import { SERIF } from '@/config'
@@ -18,7 +32,9 @@ function act(fn: () => void) {
 </script>
 
 <template>
-  <div class="bg-white/4 border border-white/8 rounded-xl overflow-hidden hover:border-white/14 transition-all duration-200 group relative">
+  <div
+    class="bg-white/4 border border-white/8 rounded-xl overflow-hidden hover:border-white/14 transition-all duration-200 group relative"
+  >
     <div class="flex gap-0">
       <div class="relative w-20 shrink-0 overflow-hidden">
         <img
@@ -32,8 +48,12 @@ function act(fn: () => void) {
       <div class="flex-1 min-w-0 p-4">
         <div class="flex items-start justify-between gap-2 mb-2">
           <div class="min-w-0">
-            <p class="text-white/70 text-sm font-medium truncate" :style="SERIF">{{ v.propiedad }}</p>
-            <p class="text-white/25 text-[10px] flex items-center gap-1 truncate mt-0.5"><MapPin :size="9" /> {{ v.direccion }}</p>
+            <p class="text-white/70 text-sm font-medium truncate" :style="SERIF">
+              {{ v.propiedad }}
+            </p>
+            <p class="text-white/25 text-[10px] flex items-center gap-1 truncate mt-0.5">
+              <MapPin :size="9" /> {{ v.direccion }}
+            </p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
             <span
@@ -46,7 +66,10 @@ function act(fn: () => void) {
               <span :class="['w-1.5 h-1.5 rounded-full', cfg.dot]" />
               {{ cfg.label }}
             </span>
-            <button class="p-1 rounded-md text-white/20 hover:text-white/50 hover:bg-white/5 transition-all" @click="menu = !menu">
+            <button
+              class="p-1 rounded-md text-white/20 hover:text-white/50 hover:bg-white/5 transition-all"
+              @click="menu = !menu"
+            >
               <MoreHorizontal :size="13" />
             </button>
           </div>
@@ -67,7 +90,12 @@ function act(fn: () => void) {
           </div>
         </div>
 
-        <p v-if="v.notas" class="text-white/25 text-[10px] leading-relaxed italic line-clamp-1 mb-2">"{{ v.notas }}"</p>
+        <p
+          v-if="v.notas"
+          class="text-white/25 text-[10px] leading-relaxed italic line-clamp-1 mb-2"
+        >
+          "{{ v.notas }}"
+        </p>
 
         <div class="flex items-center gap-2 flex-wrap">
           <a

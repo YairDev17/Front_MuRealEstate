@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { ArrowLeft, Bath, Bed, Calendar, Car, Check, CheckCircle2, ChevronRight, Eye, MapPin, Maximize2 } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Bath,
+  Bed,
+  Calendar,
+  Car,
+  Check,
+  CheckCircle2,
+  ChevronRight,
+  Eye,
+  MapPin,
+  Maximize2,
+} from 'lucide-vue-next'
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import WhatsAppIcon from '@/components/ui/WhatsAppIcon.vue'
 import { ESTADO_PROPIEDAD, iniciales } from '@/components/admin/estadoPropiedad'
@@ -65,7 +77,11 @@ const meta = computed(() => {
   if (!p) return []
   return [
     { icon: Calendar, label: 'Fecha de ingreso', value: p.fechaIngreso },
-    { icon: Eye, label: 'Visitas', value: p.visitas !== undefined ? p.visitas.toLocaleString() : '—' },
+    {
+      icon: Eye,
+      label: 'Visitas',
+      value: p.visitas !== undefined ? p.visitas.toLocaleString() : '—',
+    },
     { icon: CheckCircle2, label: 'ID de propiedad', value: `#${String(p.id).padStart(4, '0')}` },
   ]
 })
@@ -76,7 +92,10 @@ const meta = computed(() => {
     <p class="text-white/30 text-sm">Cargando…</p>
   </div>
 
-  <div v-else-if="!propiedad" class="min-h-screen bg-[#0d0d0c] flex flex-col items-center justify-center gap-4">
+  <div
+    v-else-if="!propiedad"
+    class="min-h-screen bg-[#0d0d0c] flex flex-col items-center justify-center gap-4"
+  >
     <p class="text-white/30 text-sm">Propiedad no encontrada.</p>
     <button
       class="text-white/50 text-xs underline underline-offset-2 hover:text-white/70"
@@ -90,7 +109,12 @@ const meta = computed(() => {
     <AdminTopBar>
       <template #center>
         <div class="hidden sm:flex items-center gap-1.5 text-xs text-white/25">
-          <button class="hover:text-white/50 transition-colors" @click="router.push('/admin/panel')">Panel</button>
+          <button
+            class="hover:text-white/50 transition-colors"
+            @click="router.push('/admin/panel')"
+          >
+            Panel
+          </button>
           <ChevronRight :size="11" />
           <span class="text-white/50 truncate max-w-[200px]">{{ propiedad.titulo }}</span>
         </div>
@@ -116,7 +140,9 @@ const meta = computed(() => {
               :alt="propiedad.titulo"
               class="kenburns-img absolute inset-0 w-full h-full object-cover"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"
+            />
 
             <div class="absolute top-4 left-4">
               <span
@@ -130,15 +156,20 @@ const meta = computed(() => {
               </span>
             </div>
             <div class="absolute top-4 right-4">
-              <span class="inline-block bg-black/60 backdrop-blur-sm text-white/80 text-xs px-3 py-1.5 rounded-full uppercase tracking-wider">
+              <span
+                class="inline-block bg-black/60 backdrop-blur-sm text-white/80 text-xs px-3 py-1.5 rounded-full uppercase tracking-wider"
+              >
                 {{ propiedad.tipo === 'venta' ? 'Venta' : 'Renta' }}
               </span>
             </div>
 
             <div class="absolute bottom-0 left-0 right-0 p-5">
-              <h1 class="text-white text-2xl leading-tight mb-1" :style="SERIF">{{ propiedad.titulo }}</h1>
+              <h1 class="text-white text-2xl leading-tight mb-1" :style="SERIF">
+                {{ propiedad.titulo }}
+              </h1>
               <p class="text-white/50 text-sm flex items-center gap-1.5">
-                <MapPin :size="12" /> {{ propiedad.colonia }}{{ propiedad.ciudad ? `, ${propiedad.ciudad}` : '' }}
+                <MapPin :size="12" /> {{ propiedad.colonia
+                }}{{ propiedad.ciudad ? `, ${propiedad.ciudad}` : '' }}
               </p>
             </div>
 
@@ -148,7 +179,9 @@ const meta = computed(() => {
                 :key="i"
                 :class="[
                   'w-12 h-9 rounded-lg overflow-hidden border-2 transition-all duration-150',
-                  i === activeImg ? 'border-white/60 opacity-100' : 'border-white/10 opacity-50 hover:opacity-75',
+                  i === activeImg
+                    ? 'border-white/60 opacity-100'
+                    : 'border-white/10 opacity-50 hover:opacity-75',
                 ]"
                 @click="activeImg = i"
               >
@@ -170,15 +203,28 @@ const meta = computed(() => {
           </div>
 
           <div v-if="propiedad.descripcion" class="bg-white/3 border border-white/6 rounded-xl p-5">
-            <h2 class="text-white/50 text-xs font-medium tracking-widest uppercase mb-3">Descripción</h2>
+            <h2 class="text-white/50 text-xs font-medium tracking-widest uppercase mb-3">
+              Descripción
+            </h2>
             <p class="text-white/60 text-sm leading-relaxed">{{ propiedad.descripcion }}</p>
           </div>
 
-          <div v-if="propiedad.caracteristicas?.length" class="bg-white/3 border border-white/6 rounded-xl p-5">
-            <h2 class="text-white/50 text-xs font-medium tracking-widest uppercase mb-4">Características</h2>
+          <div
+            v-if="propiedad.caracteristicas?.length"
+            class="bg-white/3 border border-white/6 rounded-xl p-5"
+          >
+            <h2 class="text-white/50 text-xs font-medium tracking-widest uppercase mb-4">
+              Características
+            </h2>
             <div class="grid grid-cols-2 gap-2">
-              <div v-for="c in propiedad.caracteristicas" :key="c" class="flex items-center gap-2 text-white/50 text-sm">
-                <div class="w-4 h-4 rounded-full bg-white/8 flex items-center justify-center shrink-0">
+              <div
+                v-for="c in propiedad.caracteristicas"
+                :key="c"
+                class="flex items-center gap-2 text-white/50 text-sm"
+              >
+                <div
+                  class="w-4 h-4 rounded-full bg-white/8 flex items-center justify-center shrink-0"
+                >
                   <div class="w-1.5 h-1.5 rounded-full bg-[#b8935a]" />
                 </div>
                 {{ c }}
@@ -199,7 +245,10 @@ const meta = computed(() => {
           <div class="bg-white/4 border border-white/8 rounded-xl p-5">
             <div class="flex items-center justify-between mb-4">
               <p class="text-white/30 text-xs tracking-widest uppercase">Estado</p>
-              <span v-if="statusChanged" class="flex items-center gap-1 text-emerald-400 text-[10px] font-medium">
+              <span
+                v-if="statusChanged"
+                class="flex items-center gap-1 text-emerald-400 text-[10px] font-medium"
+              >
                 <Check :size="10" /> Guardado
               </span>
             </div>
@@ -215,7 +264,10 @@ const meta = computed(() => {
                   <span :class="['w-2 h-2 rounded-full', cfg.dot]" />
                   {{ cfg.singular }}
                 </span>
-                <ChevronRight :size="13" :class="['transition-transform duration-150', statusMenuOpen ? 'rotate-90' : '']" />
+                <ChevronRight
+                  :size="13"
+                  :class="['transition-transform duration-150', statusMenuOpen ? 'rotate-90' : '']"
+                />
               </button>
               <div
                 v-if="statusMenuOpen"
@@ -226,7 +278,9 @@ const meta = computed(() => {
                   :key="value"
                   :class="[
                     'w-full flex items-center gap-2.5 px-4 py-3 text-sm transition-colors',
-                    value === propiedad.estado ? 'bg-white/6 text-white/80' : 'text-white/40 hover:bg-white/4 hover:text-white/60',
+                    value === propiedad.estado
+                      ? 'bg-white/6 text-white/80'
+                      : 'text-white/40 hover:bg-white/4 hover:text-white/60',
                   ]"
                   @click="handleEstadoChange(value)"
                 >
@@ -265,7 +319,9 @@ const meta = computed(() => {
             <p class="text-white/30 text-xs tracking-widest uppercase mb-4">Información</p>
             <div class="flex flex-col gap-3">
               <div v-for="m in meta" :key="m.label" class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-white/25 text-xs"><component :is="m.icon" :size="13" /> {{ m.label }}</div>
+                <div class="flex items-center gap-2 text-white/25 text-xs">
+                  <component :is="m.icon" :size="13" /> {{ m.label }}
+                </div>
                 <span class="text-white/50 text-xs font-medium">{{ m.value }}</span>
               </div>
             </div>
@@ -287,9 +343,15 @@ const meta = computed(() => {
 
 <style scoped>
 @keyframes kenburns {
-  0% { transform: scale(1) translateX(0) translateY(0); }
-  50% { transform: scale(1.06) translateX(-1%) translateY(-0.5%); }
-  100% { transform: scale(1) translateX(0) translateY(0); }
+  0% {
+    transform: scale(1) translateX(0) translateY(0);
+  }
+  50% {
+    transform: scale(1.06) translateX(-1%) translateY(-0.5%);
+  }
+  100% {
+    transform: scale(1) translateX(0) translateY(0);
+  }
 }
 .kenburns-img {
   animation: kenburns 10s ease-in-out infinite;

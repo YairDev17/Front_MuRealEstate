@@ -43,7 +43,11 @@ async function handleSubmit() {
   >
     <template #logo>
       <div class="flex items-center">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain brightness-0 invert" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-24 w-auto object-contain brightness-0 invert"
+        />
       </div>
     </template>
     <template #aside>
@@ -56,7 +60,11 @@ async function handleSubmit() {
     </template>
     <template #mobile-logo>
       <div class="flex items-center mb-10 lg:hidden">
-        <img :src="muIsotipo" alt="MU Real Estate" class="h-24 w-auto object-contain brightness-0" />
+        <img
+          :src="muIsotipo"
+          alt="MU Real Estate"
+          class="h-24 w-auto object-contain brightness-0"
+        />
       </div>
     </template>
 
@@ -70,7 +78,14 @@ async function handleSubmit() {
         <label for="email" class="text-[#1a1714] text-xs font-medium tracking-wider uppercase">
           Inicio de sesión
         </label>
-        <input id="email" v-model="email" type="email" placeholder="tu@correo.com" required :class="inputCls" />
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          placeholder="tu@correo.com"
+          required
+          :class="inputCls"
+        />
       </div>
 
       <div class="flex flex-col gap-1.5">
@@ -144,7 +159,9 @@ async function handleSubmit() {
     </div>
 
     <template #footer>
-      <p class="mt-12 text-[#a89f95] text-xs text-center">© 2026 MU Real Estate. Todos los derechos reservados.</p>
+      <p class="mt-12 text-[#a89f95] text-xs text-center">
+        © 2026 MU Real Estate. Todos los derechos reservados.
+      </p>
     </template>
   </AuthSplitLayout>
 </template>
