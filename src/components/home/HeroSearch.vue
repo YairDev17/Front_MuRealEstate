@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ChevronDown, Search, X } from 'lucide-vue-next'
+import { Bookmark, BookmarkCheck, ChevronDown, Search, X } from 'lucide-vue-next'
 
 export type Servicio =
   'Compra' | 'Venta' | 'Renta' | 'Administración' | 'Construcción' | 'Remodelación'
@@ -22,15 +22,20 @@ const SERVICIOS: Servicio[] = [
 ]
 const TIPOS_INMUEBLE: TipoInmueble[] = ['Terrenos', 'Casas', 'Departamentos']
 
-const emit = defineEmits<{ buscar: [BusquedaHome] }>()
+const props = defineProps<{ initial?: Partial<BusquedaHome>; guardada?: boolean }>()
+const emit = defineEmits<{ buscar: [BusquedaHome]; guardar: [BusquedaHome] }>()
 
-const servicio = ref<Servicio>('Compra')
-const tipoInmueble = ref<TipoInmueble | null>(null)
-const query = ref('')
+const servicio = ref<Servicio>(props.initial?.servicio ?? 'Compra')
+const tipoInmueble = ref<TipoInmueble | null>(props.initial?.tipoInmueble ?? null)
+const query = ref(props.initial?.q ?? '')
+const actual = (): BusquedaHome => ({
+  q: query.value,
+  servicio: servicio.value,
+  tipoInmueble: tipoInmueble.value,
+})
 const showTipoMenu = ref(false)
 
-const buscar = () =>
-  emit('buscar', { q: query.value, servicio: servicio.value, tipoInmueble: tipoInmueble.value })
+const buscar = () => emit('buscar', actual())
 
 function setTipo(t: TipoInmueble | null) {
   tipoInmueble.value = t
@@ -140,6 +145,18 @@ function setServicio(s: Servicio) {
             </button>
           </span>
         </template>
+        <button
+          :class="[
+            'ml-auto shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-all duration-150 whitespace-nowrap',
+            guardada ? 'text-[#b8935a]' : 'text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2]',
+          ]"
+          :disabled="guardada"
+          @click="emit('guardar', actual())"
+        >
+          <BookmarkCheck v-if="guardada" :size="13" />
+          <Bookmark v-else :size="13" />
+          {{ guardada ? 'Búsqueda guardada' : 'Guardar búsqueda' }}
+        </button>
       </div>
     </div>
   </div>

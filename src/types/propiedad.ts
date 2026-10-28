@@ -1,3 +1,5 @@
+import type { TipoDocumento } from './modulos'
+
 export type TipoOperacion = 'venta' | 'renta'
 
 export type EstadoPropiedad = 'listada' | 'por-listar' | 'en-revision'
@@ -64,6 +66,8 @@ export interface PropiedadFormData {
   bienes: string[]
   /** Archivos seleccionados por el usuario; se envían como multipart/form-data. */
   imagenes: File[]
+  /** Documentos legales para la bóveda de expedientes (opcional). */
+  documentos?: { tipo: TipoDocumento; archivo: File }[]
 }
 
 export interface ContactoPublicacion {

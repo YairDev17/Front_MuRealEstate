@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import HomeNav from '@/components/home/HomeNav.vue'
 import HeroSearch, { type BusquedaHome } from '@/components/home/HeroSearch.vue'
 import PropertyCarousel from '@/components/home/PropertyCarousel.vue'
@@ -11,8 +12,44 @@ import SiteFooter from '@/components/home/SiteFooter.vue'
 import WhatsAppFab from '@/components/home/WhatsAppFab.vue'
 import PropertyCard from '@/components/propiedades/PropertyCard.vue'
 import { propiedadesService } from '@/services/propiedades.service'
+import { busquedasService } from '@/services/modulos.service'
+import { useAuthStore } from '@/stores/auth'
 import type { Propiedad } from '@/types/propiedad'
 import { SERIF } from '@/config'
+
+const route = useRoute()
+const router = useRouter()
+const auth = useAuthStore()
+
+// Búsqueda inicial desde la URL (p. ej. al abrir una búsqueda guardada)
+const q = (k: string) =>
+  typeof route.query[k] === 'string' ? (route.query[k] as string) : undefined
+const busquedaInicial: Partial<BusquedaHome> = {
+  q: q('q'),
+  servicio: q('servicio') as BusquedaHome['servicio'] | undefined,
+  tipoInmueble: (q('tipo') as BusquedaHome['tipoInmueble']) ?? null,
+}
+const guardada = ref(false)
+
+async function guardarBusqueda(b: BusquedaHome) {
+  if (!auth.isAuthenticated) {
+    router.push({ path: '/login', query: { redirect: '/' } })
+    return
+  }
+  const partes = [
+    b.tipoInmueble ?? 'Propiedades',
+    b.servicio === 'Renta' ? 'en renta' : `· ${b.servicio}`,
+  ]
+  if (b.q) partes.push(`en ${b.q}`)
+  await busquedasService.crear({
+    nombre: partes.join(' '),
+    filtros: { q: b.q || undefined, servicio: b.servicio, tipoInmueble: b.tipoInmueble },
+    alertas: true,
+    creada: new Date().toISOString(),
+    nuevas: 0,
+  })
+  guardada.value = true
+}
 
 const destacadas = ref<Propiedad[]>([])
 const propiedades = ref<Propiedad[]>([])
@@ -22,6 +59,7 @@ const tipoPorServicio = { Venta: 'venta', Compra: 'venta', Renta: 'renta' } as c
 
 async function cargar(busqueda?: BusquedaHome) {
   loading.value = true
+  guardada.value = false
   try {
     propiedades.value = await propiedadesService.listar({
       q: busqueda?.q,
@@ -39,15 +77,22 @@ async function cargar(busqueda?: BusquedaHome) {
 const total = computed(() => propiedades.value.length)
 
 onMounted(async () => {
-  await cargar()
-  destacadas.value = propiedades.value.filter((p) => p.destacada)
+  await cargar(
+    busquedaInicial.q || busquedaInicial.servicio ? (busquedaInicial as BusquedaHome) : undefined,
+  )
+  destacadas.value = (await propiedadesService.listar()).filter((p) => p.destacada)
 })
 </script>
 
 <template>
   <div class="min-h-screen font-['DM_Sans',sans-serif]">
     <HomeNav />
-    <HeroSearch @buscar="cargar" />
+    <HeroSearch
+      :initial="busquedaInicial"
+      :guardada="guardada"
+      @buscar="cargar"
+      @guardar="guardarBusqueda"
+    />
 
     <section id="propiedades" class="py-8 bg-[#f5f2ee]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,7 +102,9 @@ onMounted(async () => {
 
         <div class="flex items-center justify-between mb-5">
           <h2 class="text-[#1a1714] text-2xl" :style="SERIF">Todas las propiedades</h2>
-          <p class="text-[#a89f95] text-sm">{{ total }} propiedades</p>
+          <p class="text-[#a89f95] text-sm">
+            {{ total }} {{ total === 1 ? 'propiedad' : 'propiedades' }}
+          </p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <PropertyCard v-for="p in propiedades" :key="p.id" :p="p" />

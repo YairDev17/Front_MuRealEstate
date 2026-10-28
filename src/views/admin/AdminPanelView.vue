@@ -2,6 +2,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
+  BarChart3,
+  FileSignature,
+  FolderLock,
+  KeyRound,
+  Star,
   CalendarCheck,
   ChevronDown,
   Clock,
@@ -18,6 +23,8 @@ import {
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import AdminPropCard from '@/components/admin/AdminPropCard.vue'
 import PostulacionCard from '@/components/admin/PostulacionCard.vue'
+import MotivoModal from '@/components/admin/MotivoModal.vue'
+import NotificationBell from '@/components/ui/NotificationBell.vue'
 import WhatsAppIcon from '@/components/ui/WhatsAppIcon.vue'
 import { ESTADO_PROPIEDAD } from '@/components/admin/estadoPropiedad'
 import { adminPostulacionesService, adminPropiedadesService } from '@/services/admin.service'
@@ -93,10 +100,28 @@ const postStats = computed(() => [
   },
 ])
 
-async function resolver(id: number, accion: 'aprobar' | 'rechazar') {
-  const actualizada = await adminPostulacionesService[accion](id)
-  postulaciones.value = postulaciones.value.map((p) => (p.id === id ? actualizada : p))
+const rechazando = ref<Postulacion | null>(null)
+
+function reemplazar(actualizada: Postulacion) {
+  postulaciones.value = postulaciones.value.map((p) => (p.id === actualizada.id ? actualizada : p))
 }
+
+async function aprobar(id: number) {
+  reemplazar(await adminPostulacionesService.aprobar(id))
+}
+
+async function confirmarRechazo(observaciones: string) {
+  if (!rechazando.value) return
+  reemplazar(await adminPostulacionesService.rechazar(rechazando.value.id, observaciones))
+  rechazando.value = null
+}
+
+const SUGERENCIAS_RECHAZO = [
+  'Las fotografías no permiten apreciar el inmueble.',
+  'Falta documentación que acredite la propiedad.',
+  'El precio está fuera del rango del mercado de la zona.',
+  'La zona está fuera de la cobertura de MU Real Estate.',
+]
 
 function logout() {
   auth.logout()
@@ -104,9 +129,14 @@ function logout() {
 }
 
 const accesos = [
+  { label: 'Analítica', icon: BarChart3, to: '/admin/analitica' },
   { label: 'Agenda', icon: CalendarCheck, to: '/admin/agenda' },
   { label: 'Usuarios', icon: User, to: '/admin/users' },
   { label: 'Solicitudes', icon: Inbox, to: '/admin/requests' },
+  { label: 'Expedientes', icon: FolderLock, to: '/admin/expedientes' },
+  { label: 'Reseñas', icon: Star, to: '/admin/resenas' },
+  { label: 'Contratos', icon: FileSignature, to: '/admin/contratos' },
+  { label: 'Entregas', icon: KeyRound, to: '/admin/entregas' },
   { label: 'Historial', icon: History, to: '/admin/activity' },
 ]
 const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
@@ -114,6 +144,15 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
 
 <template>
   <div class="min-h-screen bg-[#0d0d0c] font-['DM_Sans',sans-serif]">
+    <MotivoModal
+      v-if="rechazando"
+      titulo="Rechazar postulación"
+      :descripcion="`Indica a ${rechazando.contacto} por qué no se publicará «${rechazando.titulo}». El mensaje le llegará por notificación.`"
+      placeholder="Ej. Las fotografías no permiten apreciar el estado del inmueble…"
+      :sugerencias="SUGERENCIAS_RECHAZO"
+      @close="rechazando = null"
+      @confirm="confirmarRechazo"
+    />
     <AdminTopBar section="Panel de control" wide>
       <template #center>
         <div
@@ -139,6 +178,7 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
           >
             <WhatsAppIcon :size="16" />
           </a>
+          <NotificationBell para="admin" variant="dark" />
           <div class="w-px h-4 bg-white/8" />
           <div class="flex items-center gap-2">
             <div
@@ -302,8 +342,8 @@ const columnas: EstadoPropiedad[] = ['listada', 'por-listar', 'en-revision']
               v-for="p in pendientes"
               :key="p.id"
               :p="p"
-              @aprobar="resolver(p.id, 'aprobar')"
-              @rechazar="resolver(p.id, 'rechazar')"
+              @aprobar="aprobar(p.id)"
+              @rechazar="rechazando = p"
             />
           </div>
         </div>

@@ -14,6 +14,11 @@ import {
   Plus,
   Search,
   Trash2,
+  ShieldCheck,
+  FileText,
+  Star,
+  FileSignature,
+  KeyRound,
 } from 'lucide-vue-next'
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import { adminActividadService } from '@/services/admin.service'
@@ -69,6 +74,36 @@ const ACCION_CONFIG = {
     color: 'text-teal-400',
     bg: 'bg-teal-400/10 border-teal-400/20',
   },
+  moderacion: {
+    icon: ShieldCheck,
+    label: 'Moderación',
+    color: 'text-emerald-300',
+    bg: 'bg-emerald-300/10 border-emerald-300/20',
+  },
+  documento: {
+    icon: FileText,
+    label: 'Documento',
+    color: 'text-indigo-300',
+    bg: 'bg-indigo-300/10 border-indigo-300/20',
+  },
+  resena: {
+    icon: Star,
+    label: 'Reseña',
+    color: 'text-yellow-300',
+    bg: 'bg-yellow-300/10 border-yellow-300/20',
+  },
+  contrato: {
+    icon: FileSignature,
+    label: 'Contrato',
+    color: 'text-cyan-300',
+    bg: 'bg-cyan-300/10 border-cyan-300/20',
+  },
+  entrega: {
+    icon: KeyRound,
+    label: 'Entrega',
+    color: 'text-rose-300',
+    bg: 'bg-rose-300/10 border-rose-300/20',
+  },
 } satisfies Record<AccionTipo, unknown>
 
 const ACCIONES: { val: AccionTipo | 'todas'; label: string }[] = [
@@ -81,6 +116,11 @@ const ACCIONES: { val: AccionTipo | 'todas'; label: string }[] = [
   { val: 'bienes', label: 'Bienes' },
   { val: 'ubicacion', label: 'Ubicación' },
   { val: 'eliminacion', label: 'Eliminación' },
+  { val: 'moderacion', label: 'Moderación' },
+  { val: 'documento', label: 'Documentos' },
+  { val: 'resena', label: 'Reseñas' },
+  { val: 'contrato', label: 'Contratos' },
+  { val: 'entrega', label: 'Entregas' },
 ]
 
 const router = useRouter()

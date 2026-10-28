@@ -76,5 +76,6 @@ export const postulaciones: Postulacion[] = [
     correo: 'roberto@correo.com',
     fechaEnvio: '10 oct 2026',
     estado: 'rechazada',
+    observaciones: 'El terreno no cuenta con escrituras a nombre del propietario.',
   },
 ]

@@ -5,6 +5,8 @@ declare module 'vue-router' {
   interface RouteMeta {
     /** Requiere sesión de administrador. */
     requiresAdmin?: boolean
+    /** Requiere cualquier sesión iniciada. */
+    requiresAuth?: boolean
   }
 }
 
@@ -25,6 +27,18 @@ const router = createRouter({
       path: '/publicar',
       name: 'publicar',
       component: () => import('@/views/user/PublishPropertyView.vue'),
+    },
+    {
+      path: '/cuenta/favoritos',
+      name: 'mis-favoritos',
+      component: () => import('@/views/user/MisFavoritosView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/notificaciones',
+      name: 'notificaciones',
+      component: () => import('@/views/user/NotificacionesView.vue'),
+      meta: { requiresAuth: true },
     },
 
     // ── Autenticación ──
@@ -86,6 +100,31 @@ const router = createRouter({
           name: 'admin-agenda',
           component: () => import('@/views/admin/AgendaVisitasView.vue'),
         },
+        {
+          path: 'analitica',
+          name: 'admin-analitica',
+          component: () => import('@/views/admin/AnaliticaView.vue'),
+        },
+        {
+          path: 'expedientes',
+          name: 'admin-expedientes',
+          component: () => import('@/views/admin/BovedaExpedientesView.vue'),
+        },
+        {
+          path: 'resenas',
+          name: 'admin-resenas',
+          component: () => import('@/views/admin/ResenasModeracionView.vue'),
+        },
+        {
+          path: 'contratos',
+          name: 'admin-contratos',
+          component: () => import('@/views/admin/ContratosView.vue'),
+        },
+        {
+          path: 'entregas',
+          name: 'admin-entregas',
+          component: () => import('@/views/admin/EntregasView.vue'),
+        },
       ],
     },
 
@@ -97,6 +136,9 @@ router.beforeEach((to) => {
   const auth = useAuthStore()
   if (to.meta.requiresAdmin && !auth.isAdmin) {
     return { name: 'admin-login', query: { redirect: to.fullPath } }
+  }
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { name: 'login', query: { redirect: to.fullPath } }
   }
   if (to.name === 'admin-login' && auth.isAdmin) return { path: '/admin/panel' }
 })

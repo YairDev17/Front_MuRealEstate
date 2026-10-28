@@ -18,7 +18,9 @@ npm run lint
 |---|---|---|
 | `/` | Home (catálogo, carrusel, contacto) | público |
 | `/property/:id` | Detalle de propiedad | público |
-| `/publicar` | Publicar propiedad (2 pasos) | público |
+| `/publicar` | Publicar propiedad (2 pasos + documentos legales opcionales) | público |
+| `/cuenta/favoritos` | Favoritos y búsquedas guardadas con alertas | sesión |
+| `/notificaciones` | Centro de notificaciones del usuario | sesión |
 | `/login`, `/registro`, `/verificacion` | Autenticación de usuarios | público |
 | `/admin` | Login de administradores | público |
 | `/admin/panel` | Kanban de portafolio + postulaciones | admin |
@@ -27,9 +29,15 @@ npm run lint
 | `/admin/users` | Usuarios, roles y permisos | admin |
 | `/admin/requests` | Solicitudes y avisos internos | admin |
 | `/admin/agenda` | Agenda de visitas | admin |
-| `/admin/activity` | Historial de modificaciones | admin |
+| `/admin/activity` | Bitácora de auditoría (registra moderación, documentos, reseñas, contratos y entregas) | admin |
+| `/admin/analitica` | Dashboard de analítica y exportación CSV | admin |
+| `/admin/expedientes` | Bóveda digital de expedientes legales | admin |
+| `/admin/resenas` | Moderación de reseñas y calificaciones | admin |
+| `/admin/contratos` | Plantillas de contratos y borradores imprimibles | admin |
+| `/admin/entregas` | Actas de entrega/recepción (check-in / check-out) con firmas | admin |
 
-Las rutas `/admin/*` están protegidas por un guard (`src/router/index.ts`) que exige `rol === 'admin'`.
+Las rutas `/admin/*` están protegidas por un guard (`src/router/index.ts`) que exige `rol === 'admin'`; las de cuenta
+(`meta.requiresAuth`) exigen cualquier sesión.
 
 ## Conectar con el back
 
@@ -43,8 +51,12 @@ Las rutas `/admin/*` están protegidas por un guard (`src/router/index.ts`) que 
    - `propiedades.service.ts` — `GET /propiedades`, `GET /propiedades/:id`
    - `publicaciones.service.ts` — `POST /publicaciones` (multipart: campo `datos` JSON + `imagenes[]`)
    - `contacto.service.ts` — `POST /contacto`
-   - `admin.service.ts` — CRUD REST en `/admin/propiedades`, `/admin/postulaciones` (`/:id/aprobar`, `/:id/rechazar`),
-     `/admin/usuarios`, `/admin/solicitudes`, `/admin/avisos`, `/admin/visitas`, `/admin/actividad`
+   - `admin.service.ts` — CRUD REST en `/admin/propiedades`, `/admin/postulaciones` (`/:id/aprobar`, `/:id/rechazar` con
+     `{ observaciones }`), `/admin/usuarios`, `/admin/solicitudes`, `/admin/avisos`, `/admin/visitas`, `/admin/actividad`
+   - `modulos.service.ts` — `/notificaciones` (`/:id/leida`, `/leidas`), `/cuenta/busquedas`, `/resenas` y
+     `/admin/resenas/:id/(aprobar|rechazar)`, `/admin/expedientes/:id/documentos` (multipart) y `/:docId/(validar|rechazar)`,
+     `/admin/contratos/plantillas`, `/admin/entregas`, `/admin/analitica?periodo=30|90|365`
+   - En modo mock la bitácora se alimenta sola (`registrarActividad`); con backend real, el servidor debe registrar esos eventos.
 3. El login espera `{ token, usuario }` (ver `src/types/auth.ts`). El token se guarda en `localStorage` y se envía como
    `Authorization: Bearer <token>` en cada petición (`src/services/http.ts`).
 4. Los contratos de datos están en `src/types/` (`propiedad.ts`, `admin.ts`, `auth.ts`).

@@ -106,12 +106,14 @@ const cfg = computed(() => ESTADO[props.p.estado])
           <XCircle :size="12" /> Rechazar
         </button>
       </div>
-      <div
-        v-else
-        :class="['text-center py-2 rounded-lg border text-xs font-medium', cfg.bg, cfg.color]"
-      >
-        {{ cfg.label }}
-      </div>
+      <template v-else>
+        <div :class="['text-center py-2 rounded-lg border text-xs font-medium', cfg.bg, cfg.color]">
+          {{ cfg.label }}
+        </div>
+        <p v-if="p.observaciones" class="mt-2.5 text-[11px] leading-snug text-white/35">
+          <span class="text-white/50">Observaciones:</span> {{ p.observaciones }}
+        </p>
+      </template>
     </div>
   </div>
 </template>

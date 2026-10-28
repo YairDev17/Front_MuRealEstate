@@ -4,9 +4,10 @@ import { http, mockDelay, USE_MOCKS } from './http'
 /** Serializa el formulario a multipart para poder subir las fotos. */
 export function toFormData(data: PropiedadFormData, extra: Record<string, unknown> = {}) {
   const fd = new FormData()
-  const { imagenes, ...rest } = data
+  const { imagenes, documentos = [], ...rest } = data
   fd.append('datos', JSON.stringify({ ...rest, ...extra }))
   imagenes.forEach((file) => fd.append('imagenes', file))
+  documentos.forEach((d) => fd.append(`documentos_${d.tipo}`, d.archivo))
   return fd
 }
 

@@ -18,7 +18,7 @@ import { toFormData } from './publicaciones.service'
 
 // ── Helpers para el modo mock ─────────────────────────────────────────────────
 
-function mockTable<T extends { id: number }>(seed: T[]) {
+export function mockTable<T extends { id: number }>(seed: T[]) {
   const rows: T[] = structuredClone(seed)
   const find = (id: number) => {
     const row = rows.find((r) => r.id === id)
@@ -42,7 +42,7 @@ function mockTable<T extends { id: number }>(seed: T[]) {
 }
 
 /** Crea un CRUD REST estándar (`GET/POST /recurso`, `GET/PATCH/DELETE /recurso/:id`). */
-function resource<T extends { id: number }>(path: string, seed: T[]) {
+export function resource<T extends { id: number }>(path: string, seed: T[]) {
   const mock = mockTable(seed)
   return {
     listar: (): Promise<T[]> => (USE_MOCKS ? mock.list() : http(path)),
@@ -59,12 +59,31 @@ function resource<T extends { id: number }>(path: string, seed: T[]) {
 // ── Recursos ─────────────────────────────────────────────────────────────────
 // TODO(back): ajustar las rutas a los endpoints reales.
 
+const ETIQUETA_ESTADO: Record<EstadoPropiedad, string> = {
+  listada: 'Listada',
+  'por-listar': 'Por listar',
+  'en-revision': 'En revisión',
+}
+
 const propiedadesBase = resource<PropiedadAdmin>('/admin/propiedades', propiedadesAdmin)
 
 export const adminPropiedadesService = {
   ...propiedadesBase,
-  cambiarEstado: (id: number, estado: EstadoPropiedad) =>
-    propiedadesBase.actualizar(id, { estado }),
+  async cambiarEstado(id: number, estado: EstadoPropiedad): Promise<PropiedadAdmin> {
+    const antes = USE_MOCKS ? await propiedadesBase.obtener(id) : null
+    const p = await propiedadesBase.actualizar(id, { estado })
+    if (antes && antes.estado !== estado) {
+      registrarActividad({
+        propiedad: p.titulo,
+        colonia: p.colonia,
+        accion: 'estado',
+        detalle: 'Cambio de estado',
+        estadoAnterior: ETIQUETA_ESTADO[antes.estado],
+        estadoNuevo: ETIQUETA_ESTADO[estado],
+      })
+    }
+    return p
+  },
   /** Alta desde el formulario "Nueva propiedad" (multipart con fotos). */
   crearDesdeFormulario(
     data: PropiedadFormData,
@@ -102,18 +121,64 @@ const postulacionesBase = resource<Postulacion>('/admin/postulaciones', postulac
 
 export const adminPostulacionesService = {
   listar: postulacionesBase.listar,
-  aprobar: (id: number): Promise<Postulacion> =>
-    USE_MOCKS
-      ? postulacionesBase.actualizar(id, { estado: 'aprobada' })
-      : http(`/admin/postulaciones/${id}/aprobar`, { method: 'POST' }),
-  rechazar: (id: number): Promise<Postulacion> =>
-    USE_MOCKS
-      ? postulacionesBase.actualizar(id, { estado: 'rechazada' })
-      : http(`/admin/postulaciones/${id}/rechazar`, { method: 'POST' }),
+  async aprobar(id: number): Promise<Postulacion> {
+    if (!USE_MOCKS) return http(`/admin/postulaciones/${id}/aprobar`, { method: 'POST' })
+    const p = await postulacionesBase.actualizar(id, {
+      estado: 'aprobada',
+      observaciones: undefined,
+    })
+    registrarActividad({
+      propiedad: p.titulo,
+      colonia: p.colonia,
+      accion: 'moderacion',
+      detalle: 'Postulación aprobada para el portafolio',
+    })
+    return p
+  },
+  async rechazar(id: number, observaciones: string): Promise<Postulacion> {
+    if (!USE_MOCKS)
+      return http(`/admin/postulaciones/${id}/rechazar`, {
+        method: 'POST',
+        body: { observaciones },
+      })
+    const p = await postulacionesBase.actualizar(id, { estado: 'rechazada', observaciones })
+    registrarActividad({
+      propiedad: p.titulo,
+      colonia: p.colonia,
+      accion: 'moderacion',
+      detalle: `Postulación rechazada: ${observaciones}`,
+    })
+    return p
+  },
 }
 
+const actividadBase = resource<Actividad>('/admin/actividad', actividades)
+
 export const adminActividadService = {
-  listar: resource<Actividad>('/admin/actividad', actividades).listar,
+  listar: actividadBase.listar,
+}
+
+/**
+ * Agrega un evento a la bitácora. En producción el backend registra los eventos
+ * por su cuenta; aquí solo se simula para el modo mock.
+ */
+export function registrarActividad(
+  evento: Pick<Actividad, 'propiedad' | 'colonia' | 'accion' | 'detalle'> & Partial<Actividad>,
+) {
+  if (!USE_MOCKS) return
+  const ahora = new Date()
+  const sesion = JSON.parse(localStorage.getItem('mu_usuario') ?? 'null') as {
+    nombre?: string
+    apellido?: string
+  } | null
+  void actividadBase.crear({
+    fecha: ahora
+      .toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
+      .replace('.', ''),
+    hora: ahora.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', hour12: false }),
+    agente: sesion?.nombre ? `${sesion.nombre} ${sesion.apellido ?? ''}`.trim() : 'Administrador',
+    ...evento,
+  })
 }
 
 export const adminUsuariosService = resource<UsuarioAdmin>('/admin/usuarios', usuarios)

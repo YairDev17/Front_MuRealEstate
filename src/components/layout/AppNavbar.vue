@@ -4,11 +4,14 @@ import { useRouter } from 'vue-router'
 import { Heart, LogOut, Menu, Search, X } from 'lucide-vue-next'
 import muIsotipo from '@/assets/images/IsotipoMUrealEstate-removebg-preview.png'
 import WhatsAppIcon from '@/components/ui/WhatsAppIcon.vue'
+import NotificationBell from '@/components/ui/NotificationBell.vue'
+import { useFavoritosStore } from '@/stores/favoritos'
 import { useAuthStore } from '@/stores/auth'
 import { WHATSAPP_URL } from '@/config'
 
 const router = useRouter()
 const auth = useAuthStore()
+const favoritos = useFavoritosStore()
 const menuOpen = ref(false)
 const query = ref('')
 
@@ -48,10 +51,17 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
 
       <div class="hidden md:flex items-center gap-1">
         <button
-          class="p-2 rounded-lg text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2] transition-all duration-150"
+          class="relative p-2 rounded-lg text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2] transition-all duration-150"
+          title="Mis favoritos"
+          @click="router.push('/cuenta/favoritos')"
         >
           <Heart :size="18" />
+          <span
+            v-if="favoritos.ids.length"
+            class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-red-400"
+          />
         </button>
+        <NotificationBell v-if="auth.isAuthenticated" para="usuario" />
         <a
           :href="WHATSAPP_URL"
           target="_blank"
@@ -123,6 +133,12 @@ const buscar = () => router.push({ path: '/', query: query.value ? { q: query.va
             </div>
             <span class="text-sm text-[#1a1714]">{{ auth.nombreCorto }}</span>
           </div>
+          <button
+            class="text-sm text-[#7a7067] flex items-center gap-1.5 hover:text-[#1a1714]"
+            @click="router.push('/cuenta/favoritos')"
+          >
+            <Heart :size="14" /> Favoritos
+          </button>
           <button
             class="text-sm text-[#7a7067] flex items-center gap-1.5 hover:text-[#1a1714]"
             @click="handleLogout"

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { LogOut, Menu, Plus, X } from 'lucide-vue-next'
+import { Heart, LogOut, Menu, Plus, X } from 'lucide-vue-next'
+import NotificationBell from '@/components/ui/NotificationBell.vue'
 import muIsotipo from '@/assets/images/IsotipoMUrealEstate-removebg-preview.png'
 import { useAuthStore } from '@/stores/auth'
 
@@ -65,6 +66,14 @@ const navLinks = [
           <Plus :size="14" /> Publicar
         </button>
         <template v-if="auth.isAuthenticated">
+          <button
+            class="p-2 rounded-lg text-[#7a7067] hover:text-[#1a1714] hover:bg-[#ede8e2] transition-all duration-150"
+            title="Mis favoritos"
+            @click="router.push('/cuenta/favoritos')"
+          >
+            <Heart :size="18" />
+          </button>
+          <NotificationBell para="usuario" />
           <div class="flex items-center gap-2.5 pl-1">
             <div
               class="w-8 h-8 rounded-full bg-[#b8935a] flex items-center justify-center text-xs font-semibold text-white"
@@ -118,6 +127,13 @@ const navLinks = [
           @click="router.push('/publicar')"
         >
           <Plus :size="13" /> Publicar
+        </button>
+        <button
+          v-if="auth.isAuthenticated"
+          class="flex-1 py-2.5 rounded-lg border border-[#1a1714]/20 text-sm text-[#1a1714] font-medium hover:bg-[#ede8e2] transition-all flex items-center justify-center gap-1.5"
+          @click="router.push('/cuenta/favoritos')"
+        >
+          <Heart :size="13" /> Favoritos
         </button>
         <button
           v-if="auth.isAuthenticated"

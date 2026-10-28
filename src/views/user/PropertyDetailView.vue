@@ -16,6 +16,11 @@ import {
   Phone,
 } from 'lucide-vue-next'
 import AppNavbar from '@/components/layout/AppNavbar.vue'
+import StarRating from '@/components/ui/StarRating.vue'
+import ReviewForm from '@/components/resenas/ReviewForm.vue'
+import { resenasService } from '@/services/modulos.service'
+import type { Resena } from '@/types/modulos'
+import { fechaCorta } from '@/utils/formato'
 import { propiedadesService } from '@/services/propiedades.service'
 import { useFavoritosStore } from '@/stores/favoritos'
 import type { Propiedad } from '@/types/propiedad'
@@ -26,6 +31,12 @@ const router = useRouter()
 const favoritos = useFavoritosStore()
 
 const propiedad = ref<Propiedad | null>(null)
+const resenas = ref<Resena[]>([])
+const promedio = computed(() =>
+  resenas.value.length
+    ? resenas.value.reduce((s, r) => s + r.calificacion, 0) / resenas.value.length
+    : 0,
+)
 const loading = ref(true)
 const imgIndex = ref(0)
 
@@ -37,7 +48,10 @@ watch(
     loading.value = true
     imgIndex.value = 0
     try {
-      propiedad.value = await propiedadesService.obtener(Number(id))
+      ;[propiedad.value, resenas.value] = await Promise.all([
+        propiedadesService.obtener(Number(id)),
+        resenasService.publicas(Number(id)),
+      ])
     } catch {
       propiedad.value = null
     } finally {
@@ -235,6 +249,40 @@ const stats = computed(() => {
                 {{ c }}
               </div>
             </div>
+          </div>
+
+          <!-- Reseñas -->
+          <div class="mt-10">
+            <div class="flex items-end justify-between gap-4 mb-4 flex-wrap">
+              <h2 class="text-[#1a1714] text-xl" :style="SERIF">Reseñas</h2>
+              <div v-if="resenas.length" class="flex items-center gap-2 text-sm text-[#7a7067]">
+                <StarRating :model-value="Math.round(promedio)" readonly :size="14" />
+                <span class="font-medium text-[#1a1714]">{{ promedio.toFixed(1) }}</span>
+                <span
+                  >· {{ resenas.length }} {{ resenas.length === 1 ? 'reseña' : 'reseñas' }}</span
+                >
+              </div>
+            </div>
+            <div class="flex flex-col gap-3 mb-4">
+              <div
+                v-for="r in resenas"
+                :key="r.id"
+                class="bg-[#fdfaf7] border border-[#1a1714]/6 rounded-md p-5"
+              >
+                <div class="flex items-center justify-between gap-3 mb-2">
+                  <div>
+                    <p class="text-[#1a1714] text-sm font-medium">{{ r.autor }}</p>
+                    <p class="text-[#a89f95] text-xs">{{ r.perfil }} · {{ fechaCorta(r.fecha) }}</p>
+                  </div>
+                  <StarRating :model-value="r.calificacion" readonly :size="12" />
+                </div>
+                <p class="text-[#4a4540] text-sm leading-relaxed">{{ r.comentario }}</p>
+              </div>
+              <p v-if="!resenas.length" class="text-[#a89f95] text-sm">
+                Aún no hay reseñas de esta propiedad.
+              </p>
+            </div>
+            <ReviewForm :propiedad-id="propiedad.id" :propiedad="propiedad.titulo" />
           </div>
         </div>
 

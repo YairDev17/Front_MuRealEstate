@@ -60,6 +60,7 @@ const form = reactive<PropiedadFormData>({
   caracteristicas: [],
   bienes: [],
   imagenes: [],
+  documentos: [],
 })
 const estadoInicial = ref<EstadoPropiedad>('en-revision')
 const customCar = ref('')

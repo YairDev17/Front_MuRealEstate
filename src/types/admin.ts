@@ -18,11 +18,25 @@ export interface Postulacion {
   correo: string
   fechaEnvio: string
   estado: EstadoPostulacion
+  /** Motivo del rechazo, visible para el propietario. */
+  observaciones?: string
 }
 
 // ── Historial de actividad ──
 export type AccionTipo =
-  'creacion' | 'edicion' | 'estado' | 'precio' | 'imagenes' | 'eliminacion' | 'bienes' | 'ubicacion'
+  | 'creacion'
+  | 'edicion'
+  | 'estado'
+  | 'precio'
+  | 'imagenes'
+  | 'eliminacion'
+  | 'bienes'
+  | 'ubicacion'
+  | 'moderacion'
+  | 'documento'
+  | 'resena'
+  | 'contrato'
+  | 'entrega'
 
 export interface Actividad {
   id: number

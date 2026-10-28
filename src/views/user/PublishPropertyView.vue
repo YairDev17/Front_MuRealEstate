@@ -9,6 +9,8 @@ import {
   Car,
   CheckCircle2,
   ChevronDown,
+  FileText,
+  Lock,
   DollarSign,
   Image,
   MapPin,
@@ -27,6 +29,8 @@ import ImageUpload from '@/components/publicar/ImageUpload.vue'
 import PublishSuccess from '@/components/publicar/PublishSuccess.vue'
 import LoadingDots from '@/components/ui/LoadingDots.vue'
 import { AMENIDADES, BIENES_CATEGORIAS, OPERACIONES, TIPOS_INMUEBLE } from '@/constants/catalogos'
+import { DOCUMENTOS_REQUERIDOS, ETIQUETA_DOCUMENTO } from '@/services/modulos.service'
+import type { TipoDocumento } from '@/types/modulos'
 import { publicacionesService } from '@/services/publicaciones.service'
 import { useAuthStore } from '@/stores/auth'
 import type { ContactoPublicacion, PropiedadFormData } from '@/types/propiedad'
@@ -52,6 +56,7 @@ const nuevoForm = (): PropiedadFormData => ({
   caracteristicas: [],
   bienes: [],
   imagenes: [],
+  documentos: [],
 })
 
 const nuevoContacto = (): ContactoPublicacion => ({
@@ -102,6 +107,29 @@ function addBien() {
 }
 
 const previewUrl = computed(() => (form.imagenes[0] ? URL.createObjectURL(form.imagenes[0]) : ''))
+
+const docInputs = ref<Partial<Record<TipoDocumento, HTMLInputElement>>>({})
+const docError = ref('')
+const docDe = (tipo: TipoDocumento) => form.documentos?.find((d) => d.tipo === tipo)
+
+function elegirDocumento(tipo: TipoDocumento, e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  ;(e.target as HTMLInputElement).value = ''
+  if (!file) return
+  if (!/\.(pdf|jpe?g|png)$/i.test(file.name) || file.size > 10 * 1024 * 1024) {
+    docError.value = 'Usa archivos PDF, JPG o PNG de hasta 10 MB.'
+    return
+  }
+  docError.value = ''
+  form.documentos = [
+    ...(form.documentos ?? []).filter((d) => d.tipo !== tipo),
+    { tipo, archivo: file },
+  ]
+}
+
+function quitarDocumento(tipo: TipoDocumento) {
+  form.documentos = (form.documentos ?? []).filter((d) => d.tipo !== tipo)
+}
 
 function validarPaso1() {
   const faltantes: string[] = []
@@ -565,6 +593,56 @@ function publicarOtra() {
                   <X :size="9" />
                 </button>
               </span>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            v-if="step === 2"
+            :icon="Lock"
+            title="Documentación legal (opcional)"
+            subtitle="Agiliza la revisión: validamos que puedas vender o rentar el inmueble. Solo el equipo de MU Real Estate tiene acceso."
+          >
+            <div class="flex flex-col gap-2.5">
+              <div
+                v-for="tipo in DOCUMENTOS_REQUERIDOS"
+                :key="tipo"
+                class="flex items-center gap-3 bg-[#f5f2ee] rounded-md px-4 py-3"
+              >
+                <FileText :size="16" class="text-[#a89f95] shrink-0" />
+                <div class="flex-1 min-w-0">
+                  <p class="text-[#1a1714] text-sm">{{ ETIQUETA_DOCUMENTO[tipo] }}</p>
+                  <p class="text-[#a89f95] text-xs truncate">
+                    {{ docDe(tipo)?.archivo.name ?? 'Sin archivo' }}
+                  </p>
+                </div>
+                <button
+                  v-if="docDe(tipo)"
+                  type="button"
+                  class="text-[#a89f95] hover:text-[#1a1714] p-1"
+                  @click="quitarDocumento(tipo)"
+                >
+                  <X :size="13" />
+                </button>
+                <button
+                  type="button"
+                  class="text-xs font-medium px-3 py-1.5 rounded-md border border-[#1a1714]/15 text-[#1a1714] hover:bg-white transition-all"
+                  @click="docInputs[tipo]?.click()"
+                >
+                  {{ docDe(tipo) ? 'Cambiar' : 'Adjuntar' }}
+                </button>
+                <input
+                  :ref="
+                    (el) => {
+                      if (el) docInputs[tipo] = el as HTMLInputElement
+                    }
+                  "
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  class="hidden"
+                  @change="elegirDocumento(tipo, $event)"
+                />
+              </div>
+              <p v-if="docError" class="text-red-500 text-xs">{{ docError }}</p>
             </div>
           </SectionCard>
         </div>
