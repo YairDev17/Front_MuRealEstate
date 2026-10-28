@@ -1,0 +1,11 @@
+import type { UsuarioAdmin } from '@/types/admin'
+import { PERMISOS_POR_ROL } from '@/constants/permisos'
+
+export const usuarios: UsuarioAdmin[] = [
+  { id: 1, nombre: "Carlos Medina", correo: "carlos@murealstate.mx", rol: "super_admin", estado: "activo", ultimoAcceso: "Hoy, 10:32 a.m.", fechaCreacion: "12 ene 2025", permisos: PERMISOS_POR_ROL.super_admin },
+  { id: 2, nombre: "Ana Villanueva", correo: "ana@murealstate.mx", rol: "admin", estado: "activo", ultimoAcceso: "Hoy, 09:15 a.m.", fechaCreacion: "05 feb 2025", permisos: PERMISOS_POR_ROL.admin },
+  { id: 3, nombre: "Luis Cano", correo: "lcano@murealstate.mx", rol: "agente", estado: "activo", ultimoAcceso: "Ayer, 06:50 p.m.", fechaCreacion: "18 mar 2025", permisos: PERMISOS_POR_ROL.agente },
+  { id: 4, nombre: "Patricia Soto", correo: "psoto@murealstate.mx", rol: "agente", estado: "activo", ultimoAcceso: "22 oct 2026", fechaCreacion: "02 abr 2025", permisos: PERMISOS_POR_ROL.agente },
+  { id: 5, nombre: "Rodrigo Fuentes", correo: "rfuentes@murealstate.mx", rol: "visor", estado: "inactivo", ultimoAcceso: "10 sep 2026", fechaCreacion: "30 jun 2025", permisos: PERMISOS_POR_ROL.visor },
+  { id: 6, nombre: "Mónica Herrera", correo: "mherrera@murealstate.mx", rol: "visor", estado: "suspendido", ultimoAcceso: "01 ago 2026", fechaCreacion: "14 jul 2025", permisos: [] },
+]
