@@ -138,6 +138,8 @@ const stats = computed(() => {
                 :class="[
                   'w-full h-full object-cover',
                   i === imgIndex ? `ken-burns kb-${i % 4}` : '',
+                  // Con una sola foto no hay rotación: el movimiento sigue en vaivén.
+                  imgs.length === 1 && 'kb-loop',
                 ]"
               />
             </div>
@@ -187,19 +189,20 @@ const stats = computed(() => {
             </div>
 
             <div
+              v-if="imgs.length > 1"
               class="absolute bottom-4 right-4 z-20 bg-black/40 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full"
             >
               {{ imgIndex + 1 }} / {{ imgs.length }}
             </div>
           </div>
 
-          <!-- Thumbnails -->
-          <div class="flex gap-2 mb-8">
+          <!-- Thumbnails: tres por fila como en el diseño; con menos fotos no se estiran -->
+          <div :class="['flex gap-2', imgs.length > 1 ? 'mb-8' : 'mb-5']">
             <button
-              v-for="(src, i) in imgs"
+              v-for="(src, i) in imgs.length > 1 ? imgs : []"
               :key="i"
               :class="[
-                'flex-1 aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all duration-150',
+                'flex-1 max-w-[calc((100%-1rem)/3)] aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all duration-150',
                 i === imgIndex
                   ? 'border-[#1c2b47]'
                   : 'border-transparent opacity-60 hover:opacity-80',
@@ -373,6 +376,12 @@ const stats = computed(() => {
 }
 .kb-3 {
   animation: kbd3 5s ease-out forwards;
+}
+.kb-loop {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 @keyframes kbd0 {
   0% {
