@@ -4,7 +4,7 @@
  */
 import type { Propiedad, TipoOperacion } from '@/types/propiedad'
 
-export type TipoPropiedadApi = 'casa' | 'departamento' | 'terreno' | 'lote' | 'comercial'
+export type TipoPropiedadApi = 'casa' | 'departamento' | 'terreno' | 'lote' | 'comercial' | 'bodega'
 export type EstadoPublicacionApi = 'borrador' | 'en_revision' | 'publicada' | 'oculta' | 'rechazada'
 
 export interface MedioApi {
@@ -68,6 +68,7 @@ export const TIPOS_PROPIEDAD: { valor: TipoPropiedadApi; etiqueta: string }[] = 
   { valor: 'terreno', etiqueta: 'Terreno' },
   { valor: 'lote', etiqueta: 'Lote' },
   { valor: 'comercial', etiqueta: 'Comercial' },
+  { valor: 'bodega', etiqueta: 'Bodega' },
 ]
 
 export function tipoDesdeEtiqueta(etiqueta: string): TipoPropiedadApi | undefined {

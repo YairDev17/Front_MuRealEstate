@@ -4,7 +4,7 @@ import { Bookmark, BookmarkCheck, ChevronDown, Search, X } from 'lucide-vue-next
 
 export type Servicio =
   'Compra' | 'Venta' | 'Renta' | 'Administración' | 'Construcción' | 'Remodelación'
-export type TipoInmueble = 'Terrenos' | 'Casas' | 'Departamentos'
+export type TipoInmueble = 'Terrenos' | 'Casas' | 'Departamentos' | 'Bodegas'
 
 export interface BusquedaHome {
   q: string
@@ -20,7 +20,7 @@ const SERVICIOS: Servicio[] = [
   'Construcción',
   'Remodelación',
 ]
-const TIPOS_INMUEBLE: TipoInmueble[] = ['Terrenos', 'Casas', 'Departamentos']
+const TIPOS_INMUEBLE: TipoInmueble[] = ['Terrenos', 'Casas', 'Departamentos', 'Bodegas']
 
 const props = defineProps<{ initial?: Partial<BusquedaHome>; guardada?: boolean }>()
 const emit = defineEmits<{ buscar: [BusquedaHome]; guardar: [BusquedaHome] }>()

@@ -56,7 +56,7 @@ export const AMENIDADES = [
   'Roof garden',
 ]
 
-export const TIPOS_INMUEBLE = ['Casa', 'Departamento', 'Terreno', 'Lote', 'Comercial']
+export const TIPOS_INMUEBLE = ['Casa', 'Departamento', 'Terreno', 'Lote', 'Comercial', 'Bodega']
 
 export type Operacion =
   'compra' | 'venta' | 'renta' | 'administracion' | 'construccion' | 'remodelacion'
