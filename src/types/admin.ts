@@ -64,6 +64,8 @@ export interface UsuarioAdmin {
   ultimoAcceso: string
   fechaCreacion: string
   permisos: string[]
+  /** Solo al crear o al cambiar la contraseña. */
+  password?: string
 }
 
 // ── Centro de solicitudes ──

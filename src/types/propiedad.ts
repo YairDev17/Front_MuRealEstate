@@ -10,6 +10,8 @@ export interface Propiedad {
   titulo: string
   ubicacion: string
   colonia: string
+  ciudad?: string
+  tipoInmueble?: string
   precio: string
   precioNum: number
   tipo: TipoOperacion
@@ -21,6 +23,7 @@ export interface Propiedad {
   destacada?: boolean
   descripcion: string
   caracteristicas: string[]
+  bienes?: string[]
   antiguedad: string
   estacionamientos: number
 }
@@ -28,6 +31,7 @@ export interface Propiedad {
 /** Propiedad vista desde el panel de administración. */
 export interface PropiedadAdmin {
   id: number
+  clave?: string
   titulo: string
   colonia: string
   ciudad?: string
@@ -39,11 +43,16 @@ export interface PropiedadAdmin {
   imagen: string
   imagenes?: string[]
   estado: EstadoPropiedad
+  /** Estado exacto de la API (borrador, en_revision, publicada, oculta, rechazada). */
+  estadoApi?: string
+  origen?: 'interna' | 'particular'
+  motivoRechazo?: string
   agente: string
   fechaIngreso: string
   visitas?: number
   descripcion?: string
   caracteristicas?: string[]
+  bienes?: string[]
   estacionamientos?: number
 }
 

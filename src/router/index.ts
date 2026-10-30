@@ -25,6 +25,7 @@ const router = createRouter({
     },
     {
       path: '/publicar',
+      meta: { requiresAuth: true },
       name: 'publicar',
       component: () => import('@/views/user/PublishPropertyView.vue'),
     },
@@ -43,6 +44,11 @@ const router = createRouter({
 
     // ── Autenticación ──
     { path: '/login', name: 'login', component: () => import('@/views/auth/LoginView.vue') },
+    {
+      path: '/recuperar',
+      name: 'recuperar',
+      component: () => import('@/views/auth/RecuperarPasswordView.vue'),
+    },
     {
       path: '/registro',
       name: 'registro',

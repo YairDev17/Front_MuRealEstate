@@ -350,7 +350,7 @@ const stats = computed(() => {
             class="mt-4 rounded-2xl overflow-hidden border border-[#1c2b47]/8 aspect-[4/3] bg-[#ede8e2] flex flex-col items-center justify-center gap-2"
           >
             <MapPin :size="20" class="text-[#a89f95]" />
-            <p class="text-[#a89f95] text-xs">{{ propiedad.colonia }}, CDMX</p>
+            <p class="text-[#a89f95] text-xs">{{ propiedad.ubicacion }}</p>
           </div>
         </div>
       </div>

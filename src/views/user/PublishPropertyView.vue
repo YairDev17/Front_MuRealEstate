@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   ArrowLeft,
@@ -32,12 +32,29 @@ import { AMENIDADES, BIENES_CATEGORIAS, OPERACIONES, TIPOS_INMUEBLE } from '@/co
 import { DOCUMENTOS_REQUERIDOS, ETIQUETA_DOCUMENTO } from '@/services/modulos.service'
 import type { TipoDocumento } from '@/types/modulos'
 import { publicacionesService } from '@/services/publicaciones.service'
+import { USE_MOCKS } from '@/services/http'
+import { useCatalogos } from '@/composables/useCatalogos'
 import { useAuthStore } from '@/stores/auth'
 import type { ContactoPublicacion, PropiedadFormData } from '@/types/propiedad'
 import { SERIF } from '@/config'
 
 const router = useRouter()
 const auth = useAuthStore()
+const catalogos = useCatalogos()
+
+// Con la API conectada, amenidades, bienes y zonas salen de sus catálogos; en mock, de las constantes.
+const listaAmenidades = computed(() =>
+  USE_MOCKS ? AMENIDADES : catalogos.amenidades.value.map((a) => a.nombre),
+)
+const gruposBienes = computed(() =>
+  USE_MOCKS
+    ? BIENES_CATEGORIAS
+    : catalogos.bienes.value.map((c) => ({
+        label: c.categoria,
+        items: c.bienes.map((b) => b.nombre),
+      })),
+)
+const zonasCiudad = computed(() => catalogos.zonasDe(form.ciudad))
 
 const nuevoForm = (): PropiedadFormData => ({
   nombre: '',
@@ -47,7 +64,7 @@ const nuevoForm = (): PropiedadFormData => ({
   descripcion: '',
   calle: '',
   colonia: '',
-  ciudad: 'CDMX',
+  ciudad: USE_MOCKS ? 'CDMX' : 'Cancún',
   habitaciones: 1,
   banos: 1,
   estacionamientos: 1,
@@ -106,6 +123,13 @@ function addBien() {
   customBien.value = ''
 }
 
+watch(
+  () => form.ciudad,
+  () => {
+    if (!USE_MOCKS && !zonasCiudad.value.some((z) => z.nombre === form.colonia)) form.colonia = ''
+  },
+)
+
 const previewUrl = computed(() => (form.imagenes[0] ? URL.createObjectURL(form.imagenes[0]) : ''))
 
 const docInputs = ref<Partial<Record<TipoDocumento, HTMLInputElement>>>({})
@@ -137,9 +161,12 @@ function validarPaso1() {
   if (!form.nombre.trim()) faltantes.push('nombre de la propiedad')
   if (!form.precio.trim()) faltantes.push('precio')
   if (!form.colonia.trim()) faltantes.push('colonia')
-  if (!contacto.nombre.trim()) faltantes.push('tu nombre')
-  if (!contacto.telefono.trim()) faltantes.push('teléfono')
-  if (!contacto.correo.trim()) faltantes.push('correo')
+  if (!USE_MOCKS && !form.tipoInmueble) faltantes.push('tipo de inmueble')
+  if (!USE_MOCKS && form.calle.trim().length < 5) faltantes.push('calle y número')
+  // Con la API, el contacto sale de la cuenta del usuario.
+  if (USE_MOCKS && !contacto.nombre.trim()) faltantes.push('tu nombre')
+  if (USE_MOCKS && !contacto.telefono.trim()) faltantes.push('teléfono')
+  if (USE_MOCKS && !contacto.correo.trim()) faltantes.push('correo')
   errores.value = faltantes
   return faltantes.length === 0
 }
@@ -374,7 +401,7 @@ function publicarOtra() {
             <SectionCard :icon="MapPin" title="Ubicación">
               <div class="grid sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
-                  <FieldLabel>Calle y número</FieldLabel>
+                  <FieldLabel :required="!USE_MOCKS">Calle y número</FieldLabel>
                   <input
                     v-model="form.calle"
                     type="text"
@@ -382,19 +409,40 @@ function publicarOtra() {
                     :class="inputCls"
                   />
                 </div>
-                <div>
-                  <FieldLabel required>Colonia / Fraccionamiento</FieldLabel>
-                  <input
-                    v-model="form.colonia"
-                    type="text"
-                    placeholder="Ej. Lomas de Chapultepec"
-                    :class="inputCls"
-                  />
-                </div>
-                <div>
-                  <FieldLabel>Ciudad</FieldLabel>
-                  <input v-model="form.ciudad" type="text" placeholder="CDMX" :class="inputCls" />
-                </div>
+                <template v-if="USE_MOCKS">
+                  <div>
+                    <FieldLabel required>Colonia / Fraccionamiento</FieldLabel>
+                    <input
+                      v-model="form.colonia"
+                      type="text"
+                      placeholder="Ej. Lomas de Chapultepec"
+                      :class="inputCls"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Ciudad</FieldLabel>
+                    <input v-model="form.ciudad" type="text" placeholder="CDMX" :class="inputCls" />
+                  </div>
+                </template>
+                <template v-else>
+                  <div>
+                    <FieldLabel>Ciudad</FieldLabel>
+                    <select v-model="form.ciudad" :class="inputCls">
+                      <option v-for="c in catalogos.ciudades.value" :key="c.id" :value="c.nombre">
+                        {{ c.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div>
+                    <FieldLabel required>Colonia / Zona</FieldLabel>
+                    <select v-model="form.colonia" :class="inputCls">
+                      <option value="" disabled>Seleccionar zona</option>
+                      <option v-for="z in zonasCiudad" :key="z.id" :value="z.nombre">
+                        {{ z.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                </template>
               </div>
             </SectionCard>
 
@@ -441,7 +489,7 @@ function publicarOtra() {
             <SectionCard :icon="CheckCircle2" title="Amenidades y características">
               <div class="flex flex-wrap gap-2 mb-4">
                 <button
-                  v-for="a in AMENIDADES"
+                  v-for="a in listaAmenidades"
                   :key="a"
                   type="button"
                   :class="chipBtn(form.caracteristicas.includes(a))"
@@ -450,7 +498,7 @@ function publicarOtra() {
                   <span v-if="form.caracteristicas.includes(a)" class="mr-1">✓</span>{{ a }}
                 </button>
               </div>
-              <div class="flex gap-2">
+              <div v-if="USE_MOCKS" class="flex gap-2">
                 <input
                   v-model="customAmenidad"
                   type="text"
@@ -486,37 +534,43 @@ function publicarOtra() {
             <SectionCard
               :icon="Tag"
               title="Tus datos de contacto"
-              subtitle="Para que nuestro equipo pueda comunicarse contigo."
+              :subtitle="
+                USE_MOCKS
+                  ? 'Para que nuestro equipo pueda comunicarse contigo.'
+                  : 'Usaremos los datos de tu cuenta para comunicarnos contigo.'
+              "
             >
-              <div class="grid sm:grid-cols-2 gap-4">
-                <div class="sm:col-span-2">
-                  <FieldLabel required>Nombre completo</FieldLabel>
-                  <input
-                    v-model="contacto.nombre"
-                    type="text"
-                    placeholder="Tu nombre completo"
-                    :class="inputCls"
-                  />
+              <fieldset :disabled="!USE_MOCKS" class="contents">
+                <div class="grid sm:grid-cols-2 gap-4">
+                  <div class="sm:col-span-2">
+                    <FieldLabel required>Nombre completo</FieldLabel>
+                    <input
+                      v-model="contacto.nombre"
+                      type="text"
+                      placeholder="Tu nombre completo"
+                      :class="inputCls"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel required>Teléfono</FieldLabel>
+                    <input
+                      v-model="contacto.telefono"
+                      type="tel"
+                      placeholder="+52 55 0000 0000"
+                      :class="inputCls"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel required>Correo electrónico</FieldLabel>
+                    <input
+                      v-model="contacto.correo"
+                      type="email"
+                      placeholder="tu@correo.com"
+                      :class="inputCls"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <FieldLabel required>Teléfono</FieldLabel>
-                  <input
-                    v-model="contacto.telefono"
-                    type="tel"
-                    placeholder="+52 55 0000 0000"
-                    :class="inputCls"
-                  />
-                </div>
-                <div>
-                  <FieldLabel required>Correo electrónico</FieldLabel>
-                  <input
-                    v-model="contacto.correo"
-                    type="email"
-                    placeholder="tu@correo.com"
-                    :class="inputCls"
-                  />
-                </div>
-              </div>
+              </fieldset>
             </SectionCard>
 
             <p v-if="errores.length" class="text-red-500 text-xs -mb-2">
@@ -550,7 +604,7 @@ function publicarOtra() {
             title="Bienes incluidos"
             subtitle="Selecciona los bienes que se entregan con el inmueble."
           >
-            <div v-for="cat in BIENES_CATEGORIAS" :key="cat.label" class="mb-5 last:mb-0">
+            <div v-for="cat in gruposBienes" :key="cat.label" class="mb-5 last:mb-0">
               <p class="text-[#a89f95] text-[10px] font-medium tracking-widest uppercase mb-2">
                 {{ cat.label }}
               </p>
@@ -566,7 +620,7 @@ function publicarOtra() {
                 </button>
               </div>
             </div>
-            <div class="flex gap-2 mt-4 pt-4 border-t border-[#1a1714]/6">
+            <div v-if="USE_MOCKS" class="flex gap-2 mt-4 pt-4 border-t border-[#1a1714]/6">
               <input
                 v-model="customBien"
                 type="text"
@@ -597,7 +651,7 @@ function publicarOtra() {
           </SectionCard>
 
           <SectionCard
-            v-if="step === 2"
+            v-if="step === 2 && USE_MOCKS"
             :icon="Lock"
             title="Documentación legal (opcional)"
             subtitle="Agiliza la revisión: validamos que puedas vender o rentar el inmueble. Solo el equipo de MU Real Estate tiene acceso."

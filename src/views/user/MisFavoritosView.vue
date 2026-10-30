@@ -23,7 +23,7 @@ const loading = ref(true)
 onMounted(async () => {
   try {
     ;[propiedades.value, busquedas.value] = await Promise.all([
-      propiedadesService.listar(),
+      favoritos.sincronizar().then(() => propiedadesService.listar()),
       busquedasService.listar(),
     ])
   } finally {

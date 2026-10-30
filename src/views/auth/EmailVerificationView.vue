@@ -204,7 +204,7 @@ function digitClass(d: string) {
           Próximo paso
         </p>
         <p class="text-sm text-[#1a1714]">
-          Un asesor de MU Real Estate te contactará para ayudarte a publicar tu propiedad.
+          Inicia sesión y entra a «Publicar propiedad» para subir la tuya con fotos.
         </p>
       </div>
 

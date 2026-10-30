@@ -80,7 +80,9 @@ onMounted(async () => {
   await cargar(
     busquedaInicial.q || busquedaInicial.servicio ? (busquedaInicial as BusquedaHome) : undefined,
   )
-  destacadas.value = (await propiedadesService.listar()).filter((p) => p.destacada)
+  destacadas.value = await propiedadesService.listar({ destacada: true })
+  // Sin destacadas marcadas, el carrusel muestra las más recientes.
+  if (!destacadas.value.length) destacadas.value = propiedades.value.slice(0, 6)
 })
 </script>
 

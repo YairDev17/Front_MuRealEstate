@@ -22,7 +22,7 @@ export const useNotificacionesStore = defineStore('notificaciones', () => {
 
   async function marcarLeida(n: Notificacion) {
     if (n.leida) return
-    const act = await notificacionesService.marcarLeida(n.id)
+    const act = await notificacionesService.marcarLeida(n.id, destinatario.value)
     items.value = items.value.map((x) => (x.id === n.id ? act : x))
   }
 

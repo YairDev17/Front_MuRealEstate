@@ -1,3 +1,4 @@
+/** `admin` = personal con acceso al panel (administrador o asesor); `usuario` = cuenta del sitio. */
 export type Rol = 'usuario' | 'admin'
 
 export interface Usuario {
@@ -7,6 +8,10 @@ export interface Usuario {
   correo: string
   telefono?: string
   rol: Rol
+  /** Rol tal como lo define la API: administrador, asesor, cliente o propietario. */
+  rolApi?: string
+  permisos?: string[]
+  emailVerificado?: boolean
 }
 
 export interface LoginPayload {
@@ -24,10 +29,15 @@ export interface RegistroPayload {
   apellido: string
   correo: string
   telefono: string
+  password: string
   interesadoEnPublicar: boolean
 }
 
 export interface VerificarCorreoPayload {
   correo: string
   codigo: string
+}
+
+export interface RestablecerPasswordPayload extends VerificarCorreoPayload {
+  password: string
 }

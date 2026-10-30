@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ArrowLeft, ArrowRight } from 'lucide-vue-next'
+import { ArrowLeft, ArrowRight, Eye, EyeOff } from 'lucide-vue-next'
 import AuthSplitLayout from '@/components/layout/AuthSplitLayout.vue'
 import LoadingDots from '@/components/ui/LoadingDots.vue'
 import muIsotipo from '@/assets/images/IsotipoMUrealEstate-removebg-preview.png'
@@ -16,8 +16,10 @@ const form = reactive<RegistroPayload>({
   apellido: '',
   correo: '',
   telefono: '',
+  password: '',
   interesadoEnPublicar: false,
 })
+const showPassword = ref(false)
 const loading = ref(false)
 const error = ref('')
 
@@ -140,6 +142,33 @@ async function handleSubmit() {
         />
       </div>
 
+      <div class="flex flex-col gap-1.5">
+        <label for="password" :class="labelCls">Contraseña</label>
+        <div class="relative">
+          <input
+            id="password"
+            v-model="form.password"
+            :type="showPassword ? 'text' : 'password'"
+            placeholder="Mínimo 8 caracteres"
+            autocomplete="new-password"
+            minlength="8"
+            maxlength="72"
+            required
+            :class="[inputCls, 'pr-11']"
+          />
+          <button
+            type="button"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#a89f95] hover:text-[#1a1714] transition-colors duration-150"
+            tabindex="-1"
+            :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            @click="showPassword = !showPassword"
+          >
+            <EyeOff v-if="showPassword" :size="16" />
+            <Eye v-else :size="16" />
+          </button>
+        </div>
+      </div>
+
       <!-- ¿Interesado en publicar? — toggle pill -->
       <div class="flex flex-col gap-2">
         <span :class="labelCls">¿Tienes una propiedad para publicar?</span>
@@ -177,7 +206,7 @@ async function handleSubmit() {
         <p class="text-[#a89f95] text-xs leading-relaxed pl-1">
           {{
             form.interesadoEnPublicar
-              ? 'Un asesor te contactará para ayudarte a publicar tu propiedad.'
+              ? 'Podrás subir tu propiedad con fotos y seguir su revisión desde tu cuenta.'
               : 'Podrás publicar propiedades más adelante si cambias de opinión.'
           }}
         </p>

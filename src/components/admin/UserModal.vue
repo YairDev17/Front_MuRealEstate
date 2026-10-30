@@ -3,7 +3,8 @@ import { reactive } from 'vue'
 import { Check, X } from 'lucide-vue-next'
 import { PERMISOS_CATALOGO, PERMISOS_POR_ROL } from '@/constants/permisos'
 import type { RolAdmin, UsuarioAdmin } from '@/types/admin'
-import { ESTADOS_USUARIO, ROLES, ROLES_KEYS } from './rolesConfig'
+import { USE_MOCKS } from '@/services/http'
+import { ESTADOS_USUARIO, ROLES, ROLES_ASIGNABLES } from './rolesConfig'
 import { SERIF } from '@/config'
 
 const props = defineProps<{ usuario: UsuarioAdmin | null; mode: 'edit' | 'create' }>()
@@ -12,7 +13,7 @@ const emit = defineEmits<{ close: []; save: [UsuarioAdmin | Omit<UsuarioAdmin, '
 const blank: Omit<UsuarioAdmin, 'id'> = {
   nombre: '',
   correo: '',
-  rol: 'visor',
+  rol: USE_MOCKS ? 'visor' : 'agente',
   estado: 'activo',
   ultimoAcceso: '—',
   fechaCreacion: new Date().toLocaleDateString('es-MX', {
@@ -20,7 +21,8 @@ const blank: Omit<UsuarioAdmin, 'id'> = {
     month: 'short',
     year: 'numeric',
   }),
-  permisos: [...PERMISOS_POR_ROL.visor],
+  permisos: [...PERMISOS_POR_ROL[USE_MOCKS ? 'visor' : 'agente']],
+  password: '',
 }
 const form = reactive<UsuarioAdmin | Omit<UsuarioAdmin, 'id'>>(
   props.usuario ? { ...props.usuario, permisos: [...props.usuario.permisos] } : blank,
@@ -82,6 +84,21 @@ function guardar() {
           </div>
         </div>
 
+        <div v-if="!USE_MOCKS">
+          <label class="block text-white/40 text-xs mb-1.5 tracking-wide">
+            {{ mode === 'create' ? 'Contraseña inicial' : 'Nueva contraseña (opcional)' }}
+          </label>
+          <input
+            v-model="form.password"
+            type="password"
+            autocomplete="new-password"
+            minlength="8"
+            maxlength="72"
+            :class="inputCls"
+            placeholder="Mínimo 8 caracteres"
+          />
+        </div>
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-white/40 text-xs mb-1.5 tracking-wide">Rol</label>
@@ -90,7 +107,7 @@ function guardar() {
               :class="[inputCls, 'appearance-none']"
               @change="handleRolChange(($event.target as HTMLSelectElement).value as RolAdmin)"
             >
-              <option v-for="r in ROLES_KEYS" :key="r" :value="r" class="bg-[#141413]">
+              <option v-for="r in ROLES_ASIGNABLES" :key="r" :value="r" class="bg-[#141413]">
                 {{ ROLES[r].label }}
               </option>
             </select>

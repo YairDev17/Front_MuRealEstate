@@ -2,7 +2,8 @@
 import { computed, ref } from 'vue'
 import { CalendarCheck, PhoneCall, Send, X } from 'lucide-vue-next'
 import type { EstadoSolicitud, Solicitud } from '@/types/admin'
-import { AGENTES, ESTADOS_SOL, ESTADOS_SOL_KEYS } from './solicitudesConfig'
+import { usePersonal } from '@/composables/usePersonal'
+import { ESTADOS_SOL, ESTADOS_SOL_KEYS } from './solicitudesConfig'
 
 const props = defineProps<{ sol: Solicitud }>()
 const emit = defineEmits<{
@@ -24,6 +25,8 @@ const datos = computed(() => [
   { label: 'Fecha', value: props.sol.fecha },
   { label: 'Hora', value: props.sol.hora },
 ])
+
+const { nombres: agentes } = usePersonal()
 </script>
 
 <template>
@@ -98,7 +101,7 @@ const datos = computed(() => [
               class="flex-1 bg-white/5 border border-white/8 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-white/20 transition-all appearance-none"
             >
               <option value="" class="bg-[#141413]">Sin asignar</option>
-              <option v-for="a in AGENTES" :key="a" :value="a" class="bg-[#141413]">{{ a }}</option>
+              <option v-for="a in agentes" :key="a" :value="a" class="bg-[#141413]">{{ a }}</option>
             </select>
             <button
               class="px-4 py-2 rounded-lg bg-white/8 border border-white/10 text-white/60 text-sm hover:bg-white/14 transition-all"

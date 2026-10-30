@@ -6,6 +6,7 @@ import AuthSplitLayout from '@/components/layout/AuthSplitLayout.vue'
 import LoadingDots from '@/components/ui/LoadingDots.vue'
 import muIsotipo from '@/assets/images/IsotipoMUrealEstate-removebg-preview.png'
 import { useAuthStore } from '@/stores/auth'
+import { useFavoritosStore } from '@/stores/favoritos'
 import { SERIF } from '@/config'
 
 const router = useRouter()
@@ -26,6 +27,10 @@ async function handleSubmit() {
   error.value = ''
   try {
     await auth.login({ correo: email.value, password: password.value })
+    // Sube a la cuenta los favoritos marcados antes de iniciar sesión.
+    await useFavoritosStore()
+      .sincronizar()
+      .catch(() => {})
     const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : '/'
     router.push(redirect)
   } catch (e) {
@@ -95,6 +100,7 @@ async function handleSubmit() {
           </label>
           <button
             type="button"
+            @click="router.push({ path: '/recuperar', query: email ? { correo: email } : {} })"
             class="text-xs text-[#7a7067] hover:text-[#1a1714] transition-colors duration-150 underline underline-offset-2 decoration-[#7a7067]/40"
           >
             ¿Olvidaste tu contraseña?

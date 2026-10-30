@@ -54,6 +54,3 @@ export const AVISOS_TIPO = {
     icon: Clock,
   },
 } satisfies Record<TipoAviso, unknown>
-
-// TODO(back): obtener la lista de agentes desde /admin/usuarios.
-export const AGENTES = ['Luis Cano', 'Ana Villanueva', 'Patricia Soto', 'Carlos Medina']

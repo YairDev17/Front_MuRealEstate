@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   ArrowLeft,
@@ -21,7 +21,9 @@ import {
 import ImageUpload from '@/components/publicar/ImageUpload.vue'
 import NumberInput from '@/components/publicar/NumberInput.vue'
 import LoadingDots from '@/components/ui/LoadingDots.vue'
-import { AMENIDADES, BIENES_CATEGORIAS } from '@/constants/catalogos'
+import { AMENIDADES, BIENES_CATEGORIAS, TIPOS_INMUEBLE } from '@/constants/catalogos'
+import { USE_MOCKS } from '@/services/http'
+import { useCatalogos } from '@/composables/useCatalogos'
 import { adminPropiedadesService } from '@/services/admin.service'
 import { useAuthStore } from '@/stores/auth'
 import type { EstadoPropiedad, PropiedadFormData } from '@/types/propiedad'
@@ -29,13 +31,31 @@ import { SERIF } from '@/config'
 
 const router = useRouter()
 const auth = useAuthStore()
+const catalogos = useCatalogos()
 
+// La API solo publica en venta o renta; preventa y traspaso quedan para el modo mock.
 const OPERACIONES_ADMIN = [
   { key: 'venta', label: 'En Venta' },
   { key: 'renta', label: 'En Renta' },
-  { key: 'preventa', label: 'Preventa' },
-  { key: 'traspaso', label: 'Traspaso' },
+  ...(USE_MOCKS
+    ? ([
+        { key: 'preventa', label: 'Preventa' },
+        { key: 'traspaso', label: 'Traspaso' },
+      ] as const)
+    : []),
 ] as const
+
+const listaAmenidades = computed(() =>
+  USE_MOCKS ? AMENIDADES : catalogos.amenidades.value.map((a) => a.nombre),
+)
+const gruposBienes = computed(() =>
+  USE_MOCKS
+    ? BIENES_CATEGORIAS
+    : catalogos.bienes.value.map((c) => ({
+        label: c.categoria,
+        items: c.bienes.map((b) => b.nombre),
+      })),
+)
 
 const ESTADOS_INICIALES: { val: EstadoPropiedad; label: string; dot: string }[] = [
   { val: 'en-revision', label: 'En revisión', dot: 'bg-sky-400' },
@@ -51,7 +71,7 @@ const form = reactive<PropiedadFormData>({
   descripcion: '',
   calle: '',
   colonia: '',
-  ciudad: 'CDMX',
+  ciudad: USE_MOCKS ? 'CDMX' : 'Cancún',
   habitaciones: 1,
   banos: 1,
   estacionamientos: 1,
@@ -103,11 +123,23 @@ function addBien() {
   customBien.value = ''
 }
 
+const zonasCiudad = computed(() => catalogos.zonasDe(form.ciudad))
+watch(
+  () => form.ciudad,
+  () => {
+    if (!USE_MOCKS && !zonasCiudad.value.some((z) => z.nombre === form.colonia)) form.colonia = ''
+  },
+)
+
 const previewUrl = computed(() => (form.imagenes[0] ? URL.createObjectURL(form.imagenes[0]) : ''))
 
 async function handleSave() {
   if (!form.nombre.trim()) {
     error.value = 'Ingresa el nombre de la propiedad.'
+    return
+  }
+  if (!USE_MOCKS && !form.tipoInmueble) {
+    error.value = 'Selecciona el tipo de inmueble.'
     return
   }
   saving.value = true
@@ -196,6 +228,21 @@ async function handleSave() {
               </div>
 
               <div>
+                <label :class="labelCls">Tipo de inmueble</label>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    v-for="t in TIPOS_INMUEBLE"
+                    :key="t"
+                    type="button"
+                    :class="chipBtn(form.tipoInmueble === t)"
+                    @click="form.tipoInmueble = t"
+                  >
+                    {{ t }}
+                  </button>
+                </div>
+              </div>
+
+              <div>
                 <label :class="labelCls">Tipo de operación</label>
                 <div class="grid grid-cols-2 gap-2">
                   <button
@@ -252,19 +299,59 @@ async function handleSave() {
               <h2 class="text-white/70 text-sm font-medium tracking-wide">Ubicación</h2>
             </div>
             <div class="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label :class="labelCls">Colonia / Fraccionamiento</label>
+              <div class="sm:col-span-2">
+                <label :class="labelCls">Calle y número (dato interno)</label>
                 <input
-                  v-model="form.colonia"
+                  v-model="form.calle"
                   type="text"
-                  placeholder="Ej. Lomas de Chapultepec"
+                  placeholder="Ej. Av. Bonampak 123"
                   :class="inputCls"
                 />
               </div>
-              <div>
-                <label :class="labelCls">Ciudad</label>
-                <input v-model="form.ciudad" type="text" placeholder="CDMX" :class="inputCls" />
-              </div>
+              <template v-if="USE_MOCKS">
+                <div>
+                  <label :class="labelCls">Colonia / Fraccionamiento</label>
+                  <input
+                    v-model="form.colonia"
+                    type="text"
+                    placeholder="Ej. Lomas de Chapultepec"
+                    :class="inputCls"
+                  />
+                </div>
+                <div>
+                  <label :class="labelCls">Ciudad</label>
+                  <input v-model="form.ciudad" type="text" placeholder="CDMX" :class="inputCls" />
+                </div>
+              </template>
+              <template v-else>
+                <div>
+                  <label :class="labelCls">Ciudad</label>
+                  <select v-model="form.ciudad" :class="[inputCls, 'appearance-none']">
+                    <option
+                      v-for="c in catalogos.ciudades.value"
+                      :key="c.id"
+                      :value="c.nombre"
+                      class="bg-[#141413]"
+                    >
+                      {{ c.nombre }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label :class="labelCls">Zona</label>
+                  <select v-model="form.colonia" :class="[inputCls, 'appearance-none']">
+                    <option value="" class="bg-[#141413]">Sin zona (no se podrá publicar)</option>
+                    <option
+                      v-for="z in zonasCiudad"
+                      :key="z.id"
+                      :value="z.nombre"
+                      class="bg-[#141413]"
+                    >
+                      {{ z.nombre }}
+                    </option>
+                  </select>
+                </div>
+              </template>
             </div>
           </section>
 
@@ -333,7 +420,7 @@ async function handleSave() {
             </div>
             <div class="flex flex-wrap gap-2 mb-4">
               <button
-                v-for="c in AMENIDADES"
+                v-for="c in listaAmenidades"
                 :key="c"
                 type="button"
                 :class="chipBtn(form.caracteristicas.includes(c))"
@@ -342,7 +429,7 @@ async function handleSave() {
                 <span v-if="form.caracteristicas.includes(c)" class="mr-1">✓</span>{{ c }}
               </button>
             </div>
-            <div class="flex gap-2">
+            <div v-if="USE_MOCKS" class="flex gap-2">
               <input
                 v-model="customCar"
                 type="text"
@@ -383,7 +470,7 @@ async function handleSave() {
             <p class="text-white/25 text-xs mb-5">
               Selecciona los bienes muebles o instalaciones que se entregan con el inmueble.
             </p>
-            <div v-for="cat in BIENES_CATEGORIAS" :key="cat.label" class="mb-5 last:mb-0">
+            <div v-for="cat in gruposBienes" :key="cat.label" class="mb-5 last:mb-0">
               <p class="text-white/30 text-[10px] font-medium tracking-widest uppercase mb-2">
                 {{ cat.label }}
               </p>
@@ -399,7 +486,7 @@ async function handleSave() {
                 </button>
               </div>
             </div>
-            <div class="flex gap-2 mt-5 pt-4 border-t border-white/6">
+            <div v-if="USE_MOCKS" class="flex gap-2 mt-5 pt-4 border-t border-white/6">
               <input
                 v-model="customBien"
                 type="text"

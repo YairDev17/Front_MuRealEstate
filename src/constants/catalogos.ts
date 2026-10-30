@@ -56,16 +56,13 @@ export const AMENIDADES = [
   'Roof garden',
 ]
 
-export const TIPOS_INMUEBLE = ['Terreno', 'Casa', 'Departamento']
+export const TIPOS_INMUEBLE = ['Casa', 'Departamento', 'Terreno', 'Lote', 'Comercial']
 
 export type Operacion =
   'compra' | 'venta' | 'renta' | 'administracion' | 'construccion' | 'remodelacion'
 
+/** Operaciones con las que se puede publicar un inmueble (la API solo maneja venta y renta). */
 export const OPERACIONES: { key: Operacion; label: string }[] = [
-  { key: 'compra', label: 'Compra' },
   { key: 'venta', label: 'Venta' },
   { key: 'renta', label: 'Renta' },
-  { key: 'administracion', label: 'Administración' },
-  { key: 'construccion', label: 'Construcción' },
-  { key: 'remodelacion', label: 'Remodelación' },
 ]

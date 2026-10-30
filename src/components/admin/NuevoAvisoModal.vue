@@ -2,7 +2,8 @@
 import { reactive } from 'vue'
 import { Send, X } from 'lucide-vue-next'
 import type { Aviso, TipoAviso } from '@/types/admin'
-import { AGENTES, AVISOS_TIPO } from './solicitudesConfig'
+import { AVISOS_TIPO } from './solicitudesConfig'
+import { usePersonal } from '@/composables/usePersonal'
 import { SERIF } from '@/config'
 
 const emit = defineEmits<{ close: []; send: [Omit<Aviso, 'id' | 'leido'>] }>()
@@ -20,6 +21,8 @@ const fieldCls =
 function enviar() {
   if (form.titulo && form.cuerpo) emit('send', { ...form, autor: 'Administrador', fecha: 'Ahora' })
 }
+
+const { nombres: agentes } = usePersonal()
 </script>
 
 <template>
@@ -48,7 +51,7 @@ function enviar() {
             <label class="block text-white/40 text-xs mb-1.5 tracking-wide">Destinatario</label>
             <select v-model="form.destinatario" :class="[fieldCls, 'appearance-none']">
               <option class="bg-[#141413]">Todos</option>
-              <option v-for="a in AGENTES" :key="a" class="bg-[#141413]">{{ a }}</option>
+              <option v-for="a in agentes" :key="a" class="bg-[#141413]">{{ a }}</option>
             </select>
           </div>
         </div>

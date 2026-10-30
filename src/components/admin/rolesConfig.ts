@@ -1,4 +1,5 @@
 import { Eye, Shield, ShieldCheck, UserCheck } from 'lucide-vue-next'
+import { USE_MOCKS } from '@/services/http'
 import type { EstadoUsuario, RolAdmin } from '@/types/admin'
 
 export const ROLES = {
@@ -31,3 +32,6 @@ export const ESTADOS_USUARIO: Record<EstadoUsuario, { label: string; dot: string
   }
 
 export const ROLES_KEYS = Object.keys(ROLES) as RolAdmin[]
+
+/** Roles que se pueden asignar: la API solo tiene administrador y asesor (agente). */
+export const ROLES_ASIGNABLES: RolAdmin[] = USE_MOCKS ? ROLES_KEYS : ['admin', 'agente']

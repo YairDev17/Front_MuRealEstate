@@ -2,8 +2,9 @@
  * Servicios de los módulos de notificaciones, búsquedas guardadas, reseñas,
  * bóveda de expedientes, contratos, entrega de inmuebles y analítica.
  *
- * Mismo esquema que el resto de la capa: con `VITE_API_URL` vacía se usan los
- * datos de `src/mocks`; con valor, se llama a la API.
+ * Notificaciones ya usan la API (`/avisos`). Búsquedas guardadas, reseñas,
+ * expedientes, contratos, entregas y analítica todavía no tienen endpoints:
+ * siguen con los datos de `src/mocks` aunque `VITE_API_URL` tenga valor.
  */
 import {
   actasEntrega,
@@ -31,29 +32,75 @@ import type {
   TipoDocumento,
 } from '@/types/modulos'
 import { http, mockDelay, USE_MOCKS } from './http'
-import { mockTable, registrarActividad, resource } from './admin.service'
+import { mockTable, registrarActividad, resource, type AvisoApi } from './admin.service'
 
-// TODO(back): ajustar las rutas a los endpoints reales.
+/** Cambiar a `true` módulo por módulo conforme la API tenga sus endpoints. */
+const CON_API = false
 
 // ── Notificaciones ──────────────────────────────────────────────────────────
 
 const notifMock = mockTable(notificaciones)
 
+const TIPO_NOTIFICACION: Record<string, Notificacion['tipo']> = {
+  publicacion: 'publicacion',
+  documento: 'publicacion',
+  cita: 'cita',
+  solicitud: 'oferta',
+  favorito: 'favorito',
+  busqueda: 'favorito',
+  resena: 'resena',
+}
+
+/** Los enlaces de la API usan rutas genéricas; aquí se traducen a las rutas del front. */
+function rutaFront(enlace: string | null, destinatario: DestinatarioNotificacion) {
+  if (!enlace) return undefined
+  if (enlace.startsWith('/propiedad/')) return enlace.replace('/propiedad/', '/property/')
+  if (enlace.startsWith('/admin/solicitudes')) return '/admin/requests'
+  if (enlace.startsWith('/admin/moderacion')) return '/admin/panel'
+  if (enlace === '/mis-propiedades') return '/notificaciones'
+  return destinatario === 'admin' || !enlace.startsWith('/admin') ? enlace : undefined
+}
+
+function aNotificacion(a: AvisoApi, destinatario: DestinatarioNotificacion): Notificacion {
+  return {
+    id: a.id,
+    tipo: TIPO_NOTIFICACION[a.tipo] ?? 'sistema',
+    destinatario,
+    titulo: a.titulo,
+    mensaje: a.mensaje ?? '',
+    fecha: a.creado_en,
+    leida: a.leido,
+    enlace: rutaFront(a.enlace, destinatario),
+    porCorreo: a.por_correo,
+  }
+}
+
 export const notificacionesService = {
+  /** Con la API, el token ya identifica de quién son los avisos. */
   async listar(destinatario: DestinatarioNotificacion): Promise<Notificacion[]> {
-    if (!USE_MOCKS) return http('/notificaciones', { query: { destinatario } })
+    if (!USE_MOCKS)
+      return (await http<AvisoApi[]>('/avisos')).map((a) => aNotificacion(a, destinatario))
     const todas = await notifMock.list()
     return todas
       .filter((n) => n.destinatario === destinatario)
       .sort((a, b) => b.fecha.localeCompare(a.fecha))
   },
-  marcarLeida(id: number): Promise<Notificacion> {
-    if (!USE_MOCKS) return http(`/notificaciones/${id}/leida`, { method: 'POST' })
+  async marcarLeida(
+    id: number,
+    destinatario: DestinatarioNotificacion = 'usuario',
+  ): Promise<Notificacion> {
+    if (!USE_MOCKS)
+      return aNotificacion(
+        await http<AvisoApi>(`/avisos/${id}/leido`, { method: 'PATCH' }),
+        destinatario,
+      )
     return notifMock.update(id, { leida: true })
   },
   async marcarTodas(destinatario: DestinatarioNotificacion): Promise<void> {
-    if (!USE_MOCKS)
-      return http('/notificaciones/leidas', { method: 'POST', body: { destinatario } })
+    if (!USE_MOCKS) {
+      await http('/avisos/leidos', { method: 'PATCH' })
+      return
+    }
     const todas = await notifMock.list()
     await Promise.all(
       todas
@@ -65,16 +112,20 @@ export const notificacionesService = {
 
 // ── Búsquedas guardadas ─────────────────────────────────────────────────────
 
-export const busquedasService = resource<BusquedaGuardada>('/cuenta/busquedas', busquedasGuardadas)
+export const busquedasService = resource<BusquedaGuardada>(
+  '/cuenta/busquedas',
+  busquedasGuardadas,
+  CON_API,
+)
 
 // ── Reseñas y calificaciones ────────────────────────────────────────────────
 
-const resenasBase = resource<Resena>('/admin/resenas', resenas)
+const resenasBase = resource<Resena>('/admin/resenas', resenas, CON_API)
 
 export const resenasService = {
   /** Reseñas aprobadas: del servicio en general o de una propiedad. */
   async publicas(propiedadId?: number): Promise<Resena[]> {
-    if (!USE_MOCKS) return http('/resenas', { query: { propiedadId } })
+    if (CON_API) return http('/resenas', { query: { propiedadId } })
     const todas = await resenasBase.listar()
     return todas.filter(
       (r) =>
@@ -88,12 +139,12 @@ export const resenasService = {
       'propiedadId' | 'propiedad' | 'autor' | 'perfil' | 'calificacion' | 'comentario'
     >,
   ): Promise<Resena> {
-    if (!USE_MOCKS) return http('/resenas', { method: 'POST', body: data })
+    if (CON_API) return http('/resenas', { method: 'POST', body: data })
     return resenasBase.crear({ ...data, fecha: new Date().toISOString(), estado: 'pendiente' })
   },
   listarTodas: resenasBase.listar,
   async aprobar(r: Resena): Promise<Resena> {
-    if (!USE_MOCKS) return http(`/admin/resenas/${r.id}/aprobar`, { method: 'POST' })
+    if (CON_API) return http(`/admin/resenas/${r.id}/aprobar`, { method: 'POST' })
     const res = await resenasBase.actualizar(r.id, { estado: 'aprobada', motivoRechazo: undefined })
     registrarActividad({
       propiedad: r.propiedad ?? 'Servicio MU Real Estate',
@@ -104,7 +155,7 @@ export const resenasService = {
     return res
   },
   async rechazar(r: Resena, motivo: string): Promise<Resena> {
-    if (!USE_MOCKS)
+    if (CON_API)
       return http(`/admin/resenas/${r.id}/rechazar`, { method: 'POST', body: { motivo } })
     const res = await resenasBase.actualizar(r.id, { estado: 'rechazada', motivoRechazo: motivo })
     registrarActividad({
@@ -119,7 +170,7 @@ export const resenasService = {
 
 // ── Bóveda digital de expedientes ───────────────────────────────────────────
 
-const expedientesBase = resource<Expediente>('/admin/expedientes', expedientes)
+const expedientesBase = resource<Expediente>('/admin/expedientes', expedientes, CON_API)
 let siguienteDocId = 1000
 
 export const ETIQUETA_DOCUMENTO: Record<TipoDocumento, string> = {
@@ -147,7 +198,7 @@ export const expedientesService = {
   listar: expedientesBase.listar,
   obtener: expedientesBase.obtener,
   async cargar(expId: number, tipo: TipoDocumento, archivo: File): Promise<Expediente> {
-    if (!USE_MOCKS) {
+    if (CON_API) {
       const fd = new FormData()
       fd.append('tipo', tipo)
       fd.append('archivo', archivo)
@@ -172,7 +223,7 @@ export const expedientesService = {
     return expedientesBase.actualizar(expId, { documentos: [...exp.documentos, doc] })
   },
   async validar(exp: Expediente, doc: DocumentoLegal): Promise<Expediente> {
-    if (!USE_MOCKS)
+    if (CON_API)
       return http(`/admin/expedientes/${exp.id}/documentos/${doc.id}/validar`, { method: 'POST' })
     registrarActividad({
       propiedad: exp.propiedad,
@@ -183,7 +234,7 @@ export const expedientesService = {
     return actualizarDocumento(exp.id, doc.id, { estado: 'validado', observaciones: undefined })
   },
   async rechazar(exp: Expediente, doc: DocumentoLegal, observaciones: string): Promise<Expediente> {
-    if (!USE_MOCKS)
+    if (CON_API)
       return http(`/admin/expedientes/${exp.id}/documentos/${doc.id}/rechazar`, {
         method: 'POST',
         body: { observaciones },
@@ -203,6 +254,7 @@ export const expedientesService = {
 export const plantillasService = resource<PlantillaContrato>(
   '/admin/contratos/plantillas',
   plantillasContrato,
+  CON_API,
 )
 
 /** Sustituye los marcadores {{campo}} de la plantilla con los datos de la operación. */
@@ -224,7 +276,7 @@ export function registrarContratoGenerado(plantilla: PlantillaContrato, datos: D
 
 // ── Entrega y recepción de inmuebles ────────────────────────────────────────
 
-const actasBase = resource<ActaEntrega>('/admin/entregas', actasEntrega)
+const actasBase = resource<ActaEntrega>('/admin/entregas', actasEntrega, CON_API)
 
 export const actasService = {
   ...actasBase,
@@ -246,7 +298,7 @@ const MESES = ['May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct']
 
 export const analiticaService = {
   async obtener(periodo: PeriodoAnalitica): Promise<Analitica> {
-    if (!USE_MOCKS) return http('/admin/analitica', { query: { periodo } })
+    if (CON_API) return http('/admin/analitica', { query: { periodo } })
     // Escala los datos de ejemplo según el periodo para que los filtros se noten.
     const f = periodo === 30 ? 1 : periodo === 90 ? 2.6 : 9.4
     const meses = periodo === 30 ? MESES.slice(-2) : periodo === 90 ? MESES.slice(-3) : MESES

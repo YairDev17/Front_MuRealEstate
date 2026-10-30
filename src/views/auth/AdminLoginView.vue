@@ -119,6 +119,7 @@ async function handleSubmit() {
           </label>
           <button
             type="button"
+            @click="router.push({ path: '/recuperar', query: email ? { correo: email } : {} })"
             class="text-xs text-white/30 hover:text-white/60 transition-colors duration-150 underline underline-offset-2"
           >
             ¿Olvidaste tu contraseña?

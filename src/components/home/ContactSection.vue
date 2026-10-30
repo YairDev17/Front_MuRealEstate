@@ -16,14 +16,18 @@ import { SERIF } from '@/config'
 const form = reactive({ nombre: '', correo: '', telefono: '', mensaje: '' })
 const sending = ref(false)
 const sent = ref(false)
+const error = ref('')
 
 async function handleSubmit() {
   sending.value = true
+  error.value = ''
   try {
     await contactoService.enviar({ ...form })
     sent.value = true
     Object.assign(form, { nombre: '', correo: '', telefono: '', mensaje: '' })
     setTimeout(() => (sent.value = false), 3500)
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'No se pudo enviar el mensaje.'
   } finally {
     sending.value = false
   }
@@ -127,6 +131,7 @@ const socialLinks = [
               :class="[inputCls, 'resize-none']"
             />
           </div>
+          <p v-if="error" class="text-red-500 text-xs">{{ error }}</p>
           <button
             type="submit"
             :disabled="sending"
