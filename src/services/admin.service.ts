@@ -386,7 +386,10 @@ function aPostulacion(p: PropiedadPanelApi, i: DatosInternosApi | null): Postula
     colonia: p.ubicacion.zona ?? 'Sin zona',
     ciudad: p.ubicacion.ciudad ?? '',
     // Lo que pide el dueño es dato interno; si aún no hay precio público se muestra ese.
-    precio: formatearPrecio(p.precio_publico ?? i?.precio_real ?? null, p.operacion),
+    // La tarjeta agrega el signo de pesos y «/ mes», así que aquí va solo la cifra.
+    precio: Number(p.precio_publico ?? i?.precio_real ?? 0).toLocaleString('es-MX', {
+      maximumFractionDigits: 0,
+    }),
     habitaciones: p.recamaras ?? 0,
     banos: Number(p.banos ?? 0),
     m2: Number(p.superficie_m2 ?? 0),
